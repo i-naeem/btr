@@ -44,7 +44,7 @@ def normalize_url(url: str) -> str:
     return str(normalized_url)
 
 
-def scroll_page(driver: WebDriver, speed: float = 10) -> None:
+def scroll_page(driver: WebDriver, speed: float = 1) -> None:
     scroll_height = driver.execute_script("return document.body.scrollHeight")
 
     # Create an instance of ActionChains
@@ -53,4 +53,4 @@ def scroll_page(driver: WebDriver, speed: float = 10) -> None:
     # Perform the scroll action until the end of the page is reached
     while driver.execute_script("return window.pageYOffset + window.innerHeight") < scroll_height:
         actions.send_keys(Keys.SPACE).perform()
-        time.sleep(1)
+        time.sleep(speed)
