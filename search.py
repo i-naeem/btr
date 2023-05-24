@@ -2,6 +2,7 @@ import time
 import utils
 import random
 import constants
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
@@ -19,9 +20,38 @@ driver.maximize_window()
 
 
 def google(keywords: str, host: str):
-    start_url = "https://bing.com"
+    start_url = "https://google.com"
     driver.get(start_url)
-    pass
+    time.sleep(1)
+    searchbar = driver.find_element(by=By.TAG_NAME, value="textarea")
+
+    for key in keywords:
+        searchbar.send_keys(key)
+        time.sleep(random.uniform(*KEY_DELAY_RANGE))
+
+    searchbar.send_keys(Keys.ENTER)
+    time.sleep(1)
+
+    items = []
+    search_items = driver.find_elements(by=By.XPATH, value="//a[h3]")
+
+    for item in search_items:
+
+        href = item.get_attribute('href')
+        if href.find(host) != -1:
+            items.append(item.find_element(by=By.TAG_NAME, value="h3"))
+
+    random_item = random.choice(items)
+
+    random_item.click()
+    time.sleep(1)
+
+    utils.scroll_page(driver)
+
+    _root = driver.find_element(by=By.CSS_SELECTOR, value='a[rel=home]')
+    _root.click()
+    time.sleep(1)
+    return driver
 
 
 def bing(keywords: str, host: str):
