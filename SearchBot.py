@@ -100,7 +100,6 @@ if __name__ == "__main__":
     for index,sr in enumerate(search_results):
         print(f"\n{index}. {sr.text}")
 
-    input("Press enter key to quit")
-    driver.quit()
+    input("Press enter key to quit")    
         
         

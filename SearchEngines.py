@@ -19,5 +19,5 @@ google = SearchBot(
     searchbar_selector="textarea",
     search_result_selector="//a[h3]",
     search_result_selected_by= By.XPATH
-    )
+)
 
