@@ -58,12 +58,13 @@ class SearchBot:
         self.search_result_selected_by = search_result_selected_by;
     
     
-    def search(self, query:str) -> List[WebElement]:
+    def search(self, query:str, fltr: function) -> List[WebElement]:
         """
-        Open the driver and search the query in search engine and returns the results from search engine.
+        Open the driver and search the query in search engine and returns the results from search engine of the first page.
 
         Args:
             query (str): query text that would be search in search engine.
+            fltr (function): A filter function that filters the search results based on its returned value, if the value is truthy the search results would be added to search results other wise it would be discarded from the search results.
 
         Returns:
             List[WebElement]: list of search results.
@@ -84,8 +85,12 @@ class SearchBot:
             self.search_result_selected_by, 
             self.search_result_selector
         )
+        
+        if fltr is None:
+            return search_results;
+        
 
-        return search_results;
+        return filter(fltr, search_results);
     
 
 if __name__ == "__main__":
