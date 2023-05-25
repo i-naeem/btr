@@ -6,23 +6,10 @@ normalize_url(url): Normalize url by removing extra parameters from the url.
 """
 
 import time
-import random
-from constants import USER_AGENTS
 from urllib.parse import urljoin, urlparse
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
-
-
-def random_ua() -> str:
-    """
-    Returns a random user agent string.
-
-    Returns:
-        str: A random user agent.
-    """
-
-    return random.choice(USER_AGENTS)
 
 
 def normalize_url(url: str) -> str:

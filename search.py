@@ -2,20 +2,26 @@ import time
 import utils
 import random
 import constants
-
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
-from undetected_chromedriver import Chrome, ChromeOptions
 from selenium.common.exceptions import NoSuchElementException
+from undetected_chromedriver import Chrome, ChromeOptions
 
 KEY_DELAY_RANGE = (0.1, 0.2)
+
+PORT = "5074"
+SERVER = "2.56.119.93"
+
+
 service = Service(executable_path=constants.DRIVER_PATH)
 chrome_options = ChromeOptions()
 
-chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument(f'--proxy-server=http://{SERVER}:{PORT}')
+
 driver = Chrome(service=service, options=chrome_options)
-driver.start_session()
+
+
 driver.maximize_window()
 
 

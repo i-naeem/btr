@@ -12,7 +12,7 @@ ANCHOR_SELECTOR = HOST.get('anchor_selector')
 ANCHOR_SELECT_BY = HOST.get('anchor_select_by')
 
 
-driver = search.google("site:merjob.com", "merjob.com")
+driver = search.google("site:techwispy.com", "techwispy.com")
 
 
 for i in range(5):
