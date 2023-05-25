@@ -1,4 +1,5 @@
 import time
+import utils
 import random
 from typing import List, Tuple
 from selenium.webdriver.common.by import By
@@ -41,7 +42,7 @@ class TrafficBot:
     def view_page(self, page: WebElement) -> None:
         print("Sleeping for 5 seconds")
         time.sleep(5)
-        page.click()
+        utils.virtual_click(self.driver, page)
         time.sleep(1)
         
         
