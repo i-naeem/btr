@@ -1,5 +1,6 @@
 
 import env
+from proxies import PROXIES
 from SearchBot import SearchBot
 from TrafficBot import TrafficBot
 from selenium.webdriver.common.by import By
@@ -15,11 +16,11 @@ driver.implicitly_wait(5)
 
 
 def f(el):
-    return el.get_attribute('href').lower().find('merjob.com') != -1
+    return el.get_attribute('href').lower().find('techwispy.com') != -1
 
 google = SearchBot(driver=driver, **GOOGLE_CONFIGS)
 search_results = google.search(
-    query="site:merjob.com", 
+    query="site:techwispy.com", 
     fltr=f
 )
 
