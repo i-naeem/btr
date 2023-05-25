@@ -60,7 +60,7 @@ def virtual_click(driver:WebDriver, element:WebElement):
     time.sleep(random.uniform(1,2))
     action.move_to_element_with_offset(element, 0, 0).perform()
     time.sleep(random.uniform(1,2))
-    action.click().perform()
+    element.click()
 
 def scroll_up_down(driver: WebDriver, speed: float = 2) -> None:
     scroll_height = driver.execute_script("return document.body.scrollHeight")
