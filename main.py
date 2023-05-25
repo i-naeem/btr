@@ -8,4 +8,3 @@ chrome_options = ChromeOptions()
 
 driver = Chrome(service=service, options=chrome_options)
 driver.maximize_window()
-input("Press any key to quit")
