@@ -25,19 +25,15 @@ example:
 
 """
     
-import env
 from typing import List, Callable
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver import Chrome, ChromeOptions
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 
 
-service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
-chrome_options = ChromeOptions()
+
 
 class SearchBot:
     def __init__(self,
@@ -91,30 +87,18 @@ class SearchBot:
         
 
         return list(filter(fltr, search_results));
-
-if __name__ == "__main__":
-    driver = Chrome(service=service, options=chrome_options)
-    driver.maximize_window()
-    driver.implicitly_wait(5)
     
-    google_bot = SearchBot(
-    name="Google",
-    driver=driver,
-    start_url="https://google.com",
-    searchbar_selector="textarea",
-    search_result_selector="//a[h3]",
-    search_result_selected_by= By.XPATH
-    )
+if __name__ == "__main__":
+    from SearchEngines import google
     
     def fltr(el: WebElement):
         return el.get_attribute('href').lower().find('merjob.com') != -1
         
-    search_results = google_bot.search(query="site:merjob.com", fltr=fltr)
+    search_results = google.search(query="site:merjob.com", fltr=fltr)
     
     for index,sr in enumerate(search_results):
         print(f"\n{index}. {sr.text}")
 
-    input("Press enter key to quit")
-    driver.quit()
+    input("Press enter key to quit")    
         
         
