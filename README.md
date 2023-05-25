@@ -1,6 +1,8 @@
 # BTR - Bot Traffic
 
-> A bot that is used to increased the website traffic using selenium.
+> A python bot that uses selenium to increase traffic the websites.
+> The bot opens the different search engines enter the users query and search for the users website.
+> It then opens one of the links from different links from search results and views different pages.
 
 ## Requirements
 
