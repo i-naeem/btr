@@ -90,7 +90,7 @@ class SearchBot:
             return search_results;
         
 
-        return filter(fltr, search_results);
+        return list(filter(fltr, search_results));
     
 
 if __name__ == "__main__":
