@@ -1,3 +1,4 @@
+
 """
 SearchBot: 
     A class that would be used to automate searching process of different search engines.
@@ -24,13 +25,17 @@ example:
     driver.quit()
 
 """
-    
+
+import env
+import time
 from typing import List, Callable
 from selenium.webdriver.common.by import By
+from SearchEngineConfigs import GOOGLE_CONFIGS
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-
 
 
 
@@ -76,6 +81,7 @@ class SearchBot:
         for char in query:
             searchbar.send_keys(char)
         searchbar.send_keys(Keys.ENTER)
+        time.sleep(2)
         
         search_results = self.driver.find_elements(
             self.search_result_selected_by, 
@@ -90,7 +96,14 @@ class SearchBot:
     
 
 if __name__ == "__main__":
-    from SearchEngines import google
+
+    service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
+    chrome_options = ChromeOptions()
+    driver = Chrome(service=service, options=chrome_options)
+    driver.maximize_window()
+    driver.implicitly_wait(5)
+    
+    google = SearchBot(driver=driver,**GOOGLE_CONFIGS,)
     
     def fltr(el: WebElement):
         return el.get_attribute('href').lower().find('merjob.com') != -1
