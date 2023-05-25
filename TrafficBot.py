@@ -40,8 +40,10 @@ class TrafficBot:
         return None;    
     
     def view_page(self, page: WebElement) -> None:
-        print("Sleeping for 5 seconds")
-        time.sleep(5)
+        utils.scroll_up_down(self.driver)
+        self.driver.execute_script('window.scrollTo(0, screen.height/2)')
+        time.sleep(random.uniform(2,4))
+
         utils.virtual_click(self.driver, page)
         time.sleep(1)
         
