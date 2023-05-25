@@ -26,7 +26,7 @@ example:
 """
     
 import env
-from typing import List
+from typing import List, Callable
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import Chrome, ChromeOptions
@@ -58,13 +58,13 @@ class SearchBot:
         self.search_result_selected_by = search_result_selected_by;
     
     
-    def search(self, query:str, fltr: function) -> List[WebElement]:
+    def search(self, query:str, fltr: Callable[[WebElement], bool]) -> List[WebElement]:
         """
         Open the driver and search the query in search engine and returns the results from search engine of the first page.
 
         Args:
             query (str): query text that would be search in search engine.
-            fltr (function): A filter function that filters the search results based on its returned value, if the value is truthy the search results would be added to search results other wise it would be discarded from the search results.
+            fltr (Callable): A filter function that filters the search results based on its returned value, if the value is truthy the search results would be added to search results other wise it would be discarded from the search results.
 
         Returns:
             List[WebElement]: list of search results.
@@ -107,7 +107,10 @@ if __name__ == "__main__":
     search_result_selected_by= By.XPATH
     )
     
-    search_results = google_bot.search("Hello World")
+    def fltr(el: WebElement):
+        return el.get_attribute('href').lower().find('merjob.com') != -1
+        
+    search_results = google_bot.search(query="site:merjob.com", fltr=fltr)
     
     for index,sr in enumerate(search_results):
         print(f"\n{index}. {sr.text}")
