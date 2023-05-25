@@ -1,3 +1,30 @@
+"""
+SearchBot: 
+    A class that would be used to automate searching process of different search engines.
+example:
+    driver = Chrome(service=service, options=chrome_options)
+    driver.maximize_window()
+    driver.implicitly_wait(5)
+    
+    google_bot = SearchBot(
+    name="Google",
+    driver=driver,
+    start_url="https://google.com",
+    searchbar_selector="textarea",
+    search_result_selector="//a[h3]",
+    search_result_selected_by= By.XPATH
+    )
+    
+    search_results = google_bot.search("Hello World")
+    
+    for index,sr in enumerate(search_results):
+        print(f"\n{index}. {sr.text}")
+
+    input("Press enter key to quit")
+    driver.quit()
+
+"""
+    
 import env
 from typing import List
 from selenium.webdriver.common.by import By
