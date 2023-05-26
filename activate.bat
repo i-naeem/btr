@@ -1,0 +1,1 @@
+.\btrenv\scripts\activate
