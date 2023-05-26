@@ -1,16 +1,16 @@
 
 import env
-from proxies import PROXIES
 from SearchBot import SearchBot
 from TrafficBot import TrafficBot
+from proxies import PROXIES, Proxy
+from joblib import Parallel, delayed
 from selenium.webdriver.common.by import By
 from SearchEngineConfigs import GOOGLE_CONFIGS
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 
 
-for proxy in PROXIES:
-    
+def start_bot(proxy: Proxy):    
     service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
     chrome_options = ChromeOptions()
     chrome_options.add_argument(f'--proxy-server={proxy.protocol}://{proxy.server}:{proxy.port}')
@@ -43,7 +43,9 @@ for proxy in PROXIES:
     )
 
 
+    try:
+        bot.start()
+    except:
+        print("FAILED!!!")
 
-    bot.start()
-
-input("Press enter to quit")
+Parallel(n_jobs=2)(delayed(start_bot)(proxy) for proxy in PROXIES)
