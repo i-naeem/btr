@@ -81,6 +81,7 @@ class SearchBot:
         )
         
         for char in query:
+            searchbar.click()
             searchbar.send_keys(char)
             time.sleep(random.uniform(0.3,0.4))
         searchbar.send_keys(Keys.ENTER)
