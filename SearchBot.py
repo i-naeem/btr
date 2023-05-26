@@ -36,7 +36,7 @@ from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from SearchEngineConfigs import GOOGLE_CONFIGS
+from SearchEngineConfigs import GOOGLE_CONFIGS, BING_CONFIGS
 
 
 
@@ -82,9 +82,9 @@ class SearchBot:
         
         for char in query:
             searchbar.send_keys(char)
-            time.sleep(random.uniform(0.2,0.3))
+            time.sleep(random.uniform(0.3,0.4))
         searchbar.send_keys(Keys.ENTER)
-        time.sleep(2)
+        time.sleep(1)
         
         search_results = self.driver.find_elements(
             self.search_result_selected_by, 
@@ -106,12 +106,12 @@ if __name__ == "__main__":
     driver.maximize_window()
     driver.implicitly_wait(5)
     
-    google = SearchBot(driver=driver,**GOOGLE_CONFIGS,)
+    bing = SearchBot(driver=driver,**BING_CONFIGS,)
     
     def fltr(el: WebElement):
         return el.get_attribute('href').lower().find('merjob.com') != -1
         
-    search_results = google.search(query="site:merjob.com", fltr=fltr)
+    search_results = bing.search(query="site:merjob.com", fltr=fltr)
     
     for index,sr in enumerate(search_results):
         print(f"\n{index}. {sr.text}")
