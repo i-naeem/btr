@@ -28,14 +28,15 @@ example:
 
 import env
 import time
+import random
 from typing import List, Callable
 from selenium.webdriver.common.by import By
-from SearchEngineConfigs import GOOGLE_CONFIGS
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
+from SearchEngineConfigs import GOOGLE_CONFIGS
 
 
 
@@ -72,6 +73,7 @@ class SearchBot:
         """
         
         self.driver.get(self.start_url)
+        time.sleep(random.uniform(2,3))
             
         searchbar = self.driver.find_element(
             self.searchbar_selected_by, 
@@ -80,6 +82,7 @@ class SearchBot:
         
         for char in query:
             searchbar.send_keys(char)
+            time.sleep(random.uniform(0.2,0.3))
         searchbar.send_keys(Keys.ENTER)
         time.sleep(2)
         
