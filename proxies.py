@@ -12,4 +12,13 @@ class Proxy:
 
 PROXIES = [
     Proxy(protocol="socks5", server="2.56.119.93", port="5074"),
+    Proxy(protocol="socks5", server="45.94.47.66", port="8110"),
+    Proxy(protocol="socks5", server="188.74.183.10", port="8279"),
+    Proxy(protocol="socks5", server="188.74.210.21", port="6100"),
+    Proxy(protocol="socks5", server="45.155.68.129", port="8133"),
+    Proxy(protocol="socks5", server="154.95.36.199", port="6893"),
+    Proxy(protocol="socks5", server="185.199.231.45", port="8382"),
+    Proxy(protocol="socks5", server="188.74.210.207", port="6286"),
+    Proxy(protocol="socks5", server="185.199.229.156", port="7492"),
+    Proxy(protocol="socks5", server="185.199.228.220", port="7300"),
 ]
