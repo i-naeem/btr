@@ -37,9 +37,9 @@
 
 4. ### Start the bot
 
-    - run `python main.py` command.
+    - run `python main.py` command or start `run.bat` script.
 
 [python]: https://www.python.org/
-[chromebrowser]: https://www.google.com/chrome/
-[chromedriver]: https://www.google.com/chrome/
 [webshare]: https://webshare.io/
+[chromebrowser]: https://www.google.com/chrome/
+[chromedriver]: https://chromedriver.chromium.org/downloads
