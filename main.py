@@ -63,6 +63,7 @@ def start_bot(proxy, query, filter_text):
             print(e)
 
 
+random.shuffle(PROXIES)
 Parallel(n_jobs=2)(
     delayed(start_bot)(proxy, "site:merjob.com", "merjob.com") for proxy in PROXIES
 )
