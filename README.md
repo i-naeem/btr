@@ -37,7 +37,7 @@
 
 4. ### Start the bot
 
-    - run `python main.py` command or start `run.bat` script.
+    - run `python main.py` command.
 
 [python]: https://www.python.org/
 [webshare]: https://webshare.io/
