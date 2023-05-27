@@ -1,5 +1,6 @@
-from selenium.webdriver.chrome.webdriver import WebDriver;
 from selenium.webdriver.remote.webelement import WebElement;
+from selenium.webdriver.chrome.webdriver import WebDriver;
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By;
 from models import Selector
 from typing import List
@@ -23,8 +24,10 @@ class SearchController:
     
     
     def search(self, q: str):
+        self._find_searchbar();
+        self._searchbar.send_keys(q, Keys.ENTER)
         
-        return self.search_results;
+        return self._find_search_results()
     
     def _find_searchbar(self) -> None:
         self._searchbar = self.driver.find_element(self.searchbar_selector)
