@@ -24,37 +24,39 @@ def start_bot(proxy, query, filter_text):
     driver.maximize_window()
     driver.implicitly_wait(5)
 
-    try:
+    for retry in range(3):
+        try:
+            def f(el): return el.get_attribute('href').lower().find(filter_text) != -1
 
-        def f(el):
-            return el.get_attribute('href').lower().find(filter_text) != -1
+            search_bot = SearchBot(driver=driver, **configs.DUCKDUCKGO)
 
-        search_bot = SearchBot(driver=driver, **configs.DUCKDUCKGO)
+            search_results = search_bot.search(
+                query=query,
+                fltr=f if filter_text else None
+            )
 
-        search_results = search_bot.search(
-            query=query,
-            fltr=f if filter_text else None
-        )
+            selectors = [
+                (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
+                (By.CSS_SELECTOR, ".entry-title > a")
+            ]
 
-        selectors = [
-            (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
-            (By.CSS_SELECTOR, ".entry-title > a")
-        ]
+            bot = TrafficBot(
+                driver=driver,
+                selectors=selectors,
+                pages=search_results,
+                views=random.randint(2, 4)
+            )
 
-        bot = TrafficBot(
-            driver=driver,
-            selectors=selectors,
-            pages=search_results,
-            views=random.randint(2, 4)
-        )
+            bot.start()
+            print("Finished...")
+            break
 
-        bot.start()
-        print("Finished...")
+        except Exception as e:
+            print(f"ERROR: {e}")
 
-    except Exception as e:
-        print(f"ERROR: {e}")
-
-    finally:
+        finally:
+            print(f"[{retry}] Retring....")
+    else:
         driver.quit()
 
 
