@@ -29,7 +29,7 @@ example:
 import env
 import time
 import random
-import SearchEngineConfigs as sec
+import configs
 from typing import List, Callable
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -103,7 +103,7 @@ if __name__ == "__main__":
     driver.maximize_window()
     driver.implicitly_wait(5)
 
-    search_bot = SearchBot(driver=driver, **sec.DUCKDUCKGO,)
+    search_bot = SearchBot(driver=driver, **configs.DUCKDUCKGO,)
 
     def fltr(el: WebElement):
         return el.get_attribute('href').lower().find('merjob.com') != -1
