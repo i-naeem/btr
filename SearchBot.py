@@ -29,6 +29,7 @@ example:
 import env
 import time
 import random
+import SearchEngineConfigs as sec
 from typing import List, Callable
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -36,9 +37,6 @@ from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
-from SearchEngineConfigs import GOOGLE_CONFIGS, BING_CONFIGS
-
-
 
 
 class SearchBot:
@@ -49,18 +47,17 @@ class SearchBot:
                  searchbar_selector: str,
                  search_result_selector: str,
                  searchbar_selected_by: By = By.CSS_SELECTOR,
-                 search_result_selected_by: By = By.CSS_SELECTOR, 
+                 search_result_selected_by: By = By.CSS_SELECTOR,
                  ):
-        self.name = name;
-        self.driver = driver;
-        self.start_url = start_url;
-        self.searchbar_selector = searchbar_selector;
-        self.searchbar_selected_by = searchbar_selected_by;
-        self.search_result_selector = search_result_selector;
-        self.search_result_selected_by = search_result_selected_by;
-    
-    
-    def search(self, query:str, fltr: Callable[[WebElement], bool]) -> List[WebElement]:
+        self.name = name
+        self.driver = driver
+        self.start_url = start_url
+        self.searchbar_selector = searchbar_selector
+        self.searchbar_selected_by = searchbar_selected_by
+        self.search_result_selector = search_result_selector
+        self.search_result_selected_by = search_result_selected_by
+
+    def search(self, query: str, fltr: Callable[[WebElement], bool]) -> List[WebElement]:
         """
         Open the driver and search the query in search engine and returns the results from search engine of the first page.
 
@@ -71,33 +68,32 @@ class SearchBot:
         Returns:
             List[WebElement]: list of search results.
         """
-        
+
         self.driver.get(self.start_url)
-        time.sleep(random.uniform(2,3))
-            
+        time.sleep(random.uniform(2, 3))
+
         searchbar = self.driver.find_element(
-            self.searchbar_selected_by, 
+            self.searchbar_selected_by,
             self.searchbar_selector
         )
-        
+
         for char in query:
             searchbar.click()
             searchbar.send_keys(char)
-            time.sleep(random.uniform(0.3,0.4))
+            time.sleep(random.uniform(0.3, 0.4))
         searchbar.send_keys(Keys.ENTER)
         time.sleep(1)
-        
+
         search_results = self.driver.find_elements(
-            self.search_result_selected_by, 
+            self.search_result_selected_by,
             self.search_result_selector
         )
-        
-        if fltr is None:
-            return search_results;
-        
 
-        return list(filter(fltr, search_results));
-    
+        if fltr is None:
+            return search_results
+
+        return list(filter(fltr, search_results))
+
 
 if __name__ == "__main__":
 
@@ -106,17 +102,15 @@ if __name__ == "__main__":
     driver = Chrome(service=service, options=chrome_options)
     driver.maximize_window()
     driver.implicitly_wait(5)
-    
-    bing = SearchBot(driver=driver,**BING_CONFIGS,)
-    
+
+    search_bot = SearchBot(driver=driver, **sec.DUCKDUCKGO,)
+
     def fltr(el: WebElement):
         return el.get_attribute('href').lower().find('merjob.com') != -1
-        
-    search_results = bing.search(query="site:merjob.com", fltr=fltr)
-    
-    for index,sr in enumerate(search_results):
+
+    search_results = search_bot.search(query="site:merjob.com", fltr=fltr)
+
+    for index, sr in enumerate(search_results):
         print(f"\n{index}. {sr.text}")
 
-    input("Press enter key to quit")    
-        
-        
+    input("Press enter key to quit")
