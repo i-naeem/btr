@@ -1,56 +1,63 @@
 
-import env
-import utils
-import random
-import configs
-from SearchBot import SearchBot
-from TrafficBot import TrafficBot
-from proxies import PROXIES, Proxy
-from joblib import Parallel, delayed
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from undetected_chromedriver import Chrome
-from selenium.webdriver.chrome.service import Service
+from joblib import Parallel, delayed
+from TrafficBot import TrafficBot
+from SearchBot import SearchBot
+from proxies import PROXIES
+import configs
+import random
+import utils
+import env
 
 
-def start_bot(query: str, filter_text: str = None, proxy: Proxy = None, ):
-
+def start_bot(proxy, query, filter_text):
+    print(proxy)
     service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
-    chrome_options = utils.get_chrome_options(proxy=proxy)
+    chrome_options = utils.get_chrome_options(
+        proxy=proxy,
+        ua="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36"
+    )
 
     driver = Chrome(service=service, options=chrome_options)
     driver.maximize_window()
     driver.implicitly_wait(5)
 
-    def f(el):
-        return el.get_attribute('href').lower().find(filter_text) != -1
-
-    search_bot = SearchBot(driver=driver, **configs.GOOGLE_CONFIGS)
-
-    search_results = search_bot.search(
-        query=query,
-        fltr=f if filter_text else None
-    )
-
-    selectors = [
-        (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
-        (By.CSS_SELECTOR, ".entry-title > a")
-    ]
-
-    bot = TrafficBot(
-        selectors=selectors,
-        pages=search_results,
-        driver=driver,
-        views=3
-    )
-
     try:
+
+        def f(el):
+            return el.get_attribute('href').lower().find(filter_text) != -1
+
+        search_bot = SearchBot(driver=driver, **configs.DUCKDUCKGO)
+
+        search_results = search_bot.search(
+            query=query,
+            fltr=f if filter_text else None
+        )
+
+        selectors = [
+            (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
+            (By.CSS_SELECTOR, ".entry-title > a")
+        ]
+
+        bot = TrafficBot(
+            driver=driver,
+            selectors=selectors,
+            pages=search_results,
+            views=random.randint(2, 4)
+        )
+
         bot.start()
-    except:
-        print("FAILED!!!")
+        print("Finished...")
+
+    except Exception as e:
+        print(f"ERROR: {e}")
+
+    finally:
+        driver.quit()
 
 
-Parallel(n_jobs=1)(delayed(start_bot)(proxy=proxy,
-                                      query="site:merjob.com",
-                                      filter_text="merjob.com")
-                   for proxy in random.sample(PROXIES, 2)
-                   )
+Parallel(n_jobs=2)(
+    delayed(start_bot)(proxy, "site:merjob.com", "merjob.com") for proxy in PROXIES
+)

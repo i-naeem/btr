@@ -1,5 +1,4 @@
 from selenium.webdriver.common.action_chains import ActionChains
-
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.chrome.webdriver import WebDriver
 from undetected_chromedriver import ChromeOptions
@@ -82,18 +81,18 @@ def get_chrome_options(proxy: Proxy = None, ua: UserAgent = None):
              "webrtc.multiple_routes_enabled": False,
              "webrtc.nonproxied_udp_enabled": False, }
 
-    ua = ua if ua else UserAgent().random
+    ua = ua if ua else UserAgent().chrome
     options = ChromeOptions()
     options.add_argument('--no-sandbox')
-    options.add_argument(f'--user-agent={ua}')
-    options.add_argument('--disable-blink-features=AutomationControlled')
-    options.add_argument('--disable-plugins-discovery')
     options.add_argument('--start-maximized')
-    options.add_argument('--disable-notifications')
-    options.add_argument('--disable-popup-blocking')
-    options.add_argument('--disable-default-apps')
+    options.add_argument(f'--user-agent={ua}')
     options.add_argument('--disable-infobars')
+    options.add_argument('--disable-default-apps')
+    options.add_argument('--disable-notifications')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-popup-blocking')
+    options.add_argument('--disable-plugins-discovery')
+    options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument("--disable-features=IsolateOrigins,site-per-process")
 
     options.add_experimental_option('prefs', prefs)

@@ -16,8 +16,8 @@ BING_CONFIGS = {
 }
 
 DUCKDUCKGO = {
-    "start_url": "https://duckduckgo.com",
     "name": "DuckDuckGo",
-    "searchbar_selector": "input[aria-label='Search with DuckDuckGo']",
+    "start_url": "https://duckduckgo.com",
     "search_result_selector": "article[data-testid='result'] h2 > a",
+    "searchbar_selector": "input[aria-label='Search with DuckDuckGo']",
 }
