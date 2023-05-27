@@ -57,7 +57,10 @@ def start_bot(proxy, query, filter_text):
         finally:
             print(f"[{retry}] Retring....")
     else:
-        driver.quit()
+        try:
+            driver.quit()
+        except Exception as e:
+            print(e)
 
 
 Parallel(n_jobs=2)(
