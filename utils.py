@@ -94,6 +94,12 @@ def get_chrome_options(proxy: Proxy = None, ua: UserAgent = None):
     options.add_argument('--disable-plugins-discovery')
     options.add_argument('--disable-blink-features=AutomationControlled')
     options.add_argument("--disable-features=IsolateOrigins,site-per-process")
+    options.add_argument("--disable-seccomp-filter-sandbox")
+    options.add_argument("--allow-http-screen-capture")
+    options.add_argument("--disable-impl-side-painting")
+    options.add_argument("--disable-setuid-sandbox")
+    options.add_argument('--ignore-ssl-errors=yes')
+    options.add_argument('--ignore-certificate-errors')
 
     options.add_experimental_option('prefs', prefs)
 
