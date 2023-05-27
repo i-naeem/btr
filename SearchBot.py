@@ -28,6 +28,7 @@ example:
 
 import env
 import time
+import utils
 import random
 import configs
 from typing import List, Callable
@@ -98,7 +99,7 @@ class SearchBot:
 if __name__ == "__main__":
 
     service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
-    chrome_options = ChromeOptions()
+    chrome_options = utils.get_chrome_options()
     driver = Chrome(service=service, options=chrome_options)
     driver.maximize_window()
     driver.implicitly_wait(5)

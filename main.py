@@ -1,5 +1,6 @@
 
 import env
+import utils
 import random
 import configs
 from SearchBot import SearchBot
@@ -7,19 +8,14 @@ from TrafficBot import TrafficBot
 from proxies import PROXIES, Proxy
 from joblib import Parallel, delayed
 from selenium.webdriver.common.by import By
-from undetected_chromedriver import Chrome, ChromeOptions
+from undetected_chromedriver import Chrome
 from selenium.webdriver.chrome.service import Service
 
 
 def start_bot(query: str, filter_text: str = None, proxy: Proxy = None, ):
 
     service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
-    chrome_options = ChromeOptions()
-
-    if proxy:
-        chrome_options.add_argument(
-            f'--proxy-server={proxy.protocol}://{proxy.server}:{proxy.port}'
-        )
+    chrome_options = utils.get_chrome_options(proxy=proxy)
 
     driver = Chrome(service=service, options=chrome_options)
     driver.maximize_window()
