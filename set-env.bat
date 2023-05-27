@@ -1,3 +1,5 @@
+@echo off
+
 @REM Creates assets directory
 mkdir assets
 
