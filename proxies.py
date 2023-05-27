@@ -1,9 +1,9 @@
-# WebShare.io demian3@mailtouiq.com:123password123
 # The proxies are authenticated by IP Address so it will not work on someone else pc
 # Get the trail version from WebShare.io and use your own proxies instead of these
 from selenium.webdriver.chrome.service import Service
 from undetected_chromedriver import Chrome
 from dataclasses import dataclass
+import random
 import utils
 import env
 
@@ -32,7 +32,7 @@ PROXIES = [
 if __name__ == '__main__':
     print("Testing Proxy")
     service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
-    options = utils.get_chrome_options(ua="Tarzan")
+    options = utils.get_chrome_options(proxy=random.choice(PROXIES))
     driver = Chrome(service=service, options=options)
     driver.maximize_window()
     driver.implicitly_wait(5)
