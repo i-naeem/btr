@@ -8,12 +8,19 @@
     "chromedriver",
     "dotenv",
     "duckduckgo",
+    "fake_useragent",
     "fltr",
+    "infobars",
     "joblib",
     "merjob",
+    "nonproxied",
+    "prefs",
+    "proxied",
     "searchbot",
+    "seccomp",
     "techwispy",
     "webelement",
+    "webrtc",
     "yourfabulouslives"
   ]
 }

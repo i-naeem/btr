@@ -54,18 +54,32 @@ class Bot:
                 for tab in self.driver.window_handles:
                     if tab != self.original_window:
                         self.driver.switch_to.window(tab)
-                        if tab == self.next_starting_window:
-                            self.view_page()
-                            self._find_available_pages()
-                        else:
-                            self.view_page()
-                            self.driver.close()
+                        time.sleep(2)
+                        try:
+                            if tab == self.next_starting_window:
+                                self.view_page()
+                                self._find_available_pages()
+                            else:
+                                self.view_page()
+                                self.driver.close()
+                        except Exception as e:
+                            print("ERROR", e)
+                            if tab == self.next_starting_window:
+                                self.next_starting_window = random.choice([
+                                    w for w in self.driver.window_handles
+                                    if w != self.original_window and w != self.next_starting_window
+                                ])
+
+                            else:
+                                self.driver.close()
 
                         current_views = current_views + 1
                         current_tabs = current_tabs - 1
 
             self.driver.switch_to.window(self.next_starting_window)
+            time.sleep(2)
         self.driver.switch_to.window(self.original_window)
+        time.sleep(2)
 
     def view_page(self):
         self.wait.until(lambda d: d.execute_script(
