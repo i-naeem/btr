@@ -1,6 +1,13 @@
 from undetected_chromedriver import ChromeOptions
 from fake_useragent import UserAgent
 from models import Proxy
+import logging
+
+logger = logging.getLogger(name="BTR")
+
+logger.setLevel(logging.DEBUG)
+logger.addHandler(logging.FileHandler('./logs/btr.log', 'a'))
+logger.addHandler(logging.StreamHandler())
 
 
 def get_chrome_options(proxy: Proxy = None, ua: UserAgent = None):
@@ -10,6 +17,7 @@ def get_chrome_options(proxy: Proxy = None, ua: UserAgent = None):
 
     ua = ua if ua else UserAgent().random
     options = ChromeOptions()
+    options.add_argument('--disable-logging')
     options.add_argument('--no-sandbox')
     options.add_argument('--start-maximized')
     options.add_argument(f'--user-agent={ua}')

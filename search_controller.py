@@ -1,3 +1,5 @@
+from selenium.webdriver.chrome.service import Service
+from undetected_chromedriver import Chrome
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -7,9 +9,8 @@ from selenium.webdriver.common.by import By
 from dataclasses import astuple
 from models import Selector
 from typing import List
+import utils
 
-from undetected_chromedriver import Chrome
-from selenium.webdriver.chrome.service import Service
 
 DEFAULT_SEARCHBAR_SELECTOR = Selector(by=By.NAME, value="q")
 DEFAULT_SEARCH_RESULT_SELECTORS = [Selector(by=By.TAG_NAME, value="a")]
@@ -32,12 +33,17 @@ class SearchController:
     def search(self, q: str):
         self._q = q
         self._find_searchbar()
+
+        utils.logger.info('SearchController: Searching query keywords')
+
         self._searchbar.send_keys(q, Keys.ENTER)
 
         return self._find_search_results()
 
     def _find_searchbar(self) -> None:
-        WebDriverWait(self.driver, 5).until(
+        utils.logger.info(f'SearchController: Searching for searchbar')
+
+        WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located(astuple(self.searchbar_selector))
         )
 
@@ -46,15 +52,22 @@ class SearchController:
         )
 
     def _find_search_results(self) -> List[WebElement]:
-        self.search_results = []
+        utils.logger.info(f'SearchController: Searching for search results')
+
         for selector in self.search_result_selectors:
-            WebDriverWait(self.driver, 5).until(
-                EC.visibility_of_element_located(astuple(selector))
-            )
+            try:
+                WebDriverWait(self.driver, 10).until(
+                    EC.visibility_of_any_elements_located(*astuple(selector))
+                )
+                results = self.driver.find_elements(*astuple(selector))
+                self.search_results.extend(results)
+            except:
+                pass
 
-            results = self.driver.find_elements(selector.by, selector.value)
+        utils.logger.info(f'SearchController: Found {len(self.search_results)} Search Result(s)')
 
-            self.search_results.extend(results)
+        if len(self.search_results) == 0:
+            raise Exception("Could not find any links to open...")
 
         return self.search_results
 
