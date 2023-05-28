@@ -77,9 +77,7 @@ class Bot:
         time.sleep(1)
 
     def scroll_down(self, speed: float = 2) -> None:
-        max_scroll = self.driver.execute_script(
-            "return document.body.scrollHeight"
-        )
+        max_scroll = self.driver.execute_script("return document.body.scrollHeight")
 
         actions = ActionChains(self.driver)
         scrolled_height = self.driver.execute_script(
@@ -87,6 +85,7 @@ class Bot:
         )
 
         while scrolled_height < max_scroll:
+            max_scroll = self.driver.execute_script("return document.body.scrollHeight")
             actions.send_keys(Keys.SPACE).perform()
             time.sleep(random.uniform(1, speed))
             scrolled_height = self.driver.execute_script(
