@@ -1,9 +1,10 @@
 from selenium.webdriver.remote.webelement import WebElement;
 from selenium.webdriver.chrome.webdriver import WebDriver;
+from selenium.webdriver.support.wait import WebDriverWait;
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By;
-from models import Selector
-from typing import List
+from models import Selector;
+from typing import List;
 
 from undetected_chromedriver import Chrome;
 from selenium.webdriver.chrome.service import Service;
@@ -34,16 +35,25 @@ class SearchController:
         return self._find_search_results()
     
     def _find_searchbar(self) -> None:
+        WebDriverWait(self.driver, 5).until(
+            lambda d: d.find_element(self.searchbar_selector.by, self.searchbar_selector.value)
+        )
+        
         self._searchbar = self.driver.find_element(
             self.searchbar_selector.by, self.searchbar_selector.value
         )
     
     def _find_search_results(self) -> List[WebElement]:
-        results = []
+        self.search_results = []
         for selector in self.search_result_selectors:
-            results.extend(self.driver.find_elements(selector.by, selector.value))
+            WebDriverWait(self.driver, 5).until(
+                lambda d: d.find_elements(selector.by, selector.value)
+            )
+            
+            results = self.driver.find_elements(selector.by, selector.value)
+            
+            self.search_results.extend(results)
         
-        self.search_results = results
         return self.search_results;
     
 
@@ -52,7 +62,11 @@ if __name__ == "__main__":
     driver = Chrome(service=Service(executable_path='./assets/chromedriver.exe'))
     driver.maximize_window()
     driver.get('https://bing.com')
-    controller = SearchController(driver=driver)
+    controller = SearchController(driver=driver,
+                                  search_result_selectors=[
+                                      Selector(by=By.CSS_SELECTOR, value="h2 > a")
+                                    ]
+                                  )
     
     for item in controller.search('Hello World'):
         print(item.text)
