@@ -24,8 +24,8 @@ items = controller.search(q="site:yourfabulouslives.com")
 bot = Bot(
     driver=driver,
     available_pages=items,
-    selectors=[(By.CSS_SELECTOR, 'h2 > a')],
-    max_tabs=4,
+    selectors=[Selector(By.CSS_SELECTOR, 'h2 > a')],
+    max_tabs=3,
     max_views=8
 )
 
