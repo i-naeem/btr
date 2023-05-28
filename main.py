@@ -3,10 +3,10 @@ import utils
 import random
 from Bot import Bot
 from models import Selector
+from undetected_chromedriver import Chrome
 from selenium.webdriver.common.by import By
 from search_controller import SearchController
 from selenium.webdriver.chrome.service import Service
-from undetected_chromedriver import Chrome, ChromeOptions
 
 search_engines = [
     {
