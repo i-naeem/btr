@@ -22,7 +22,7 @@ search_engines = [
 
 def main(proxy=None):
     service = Service(executable_path=env.CHROME_EXECUTABLE_PATH)
-    chrome_options = utils.get_chrome_options(proxy)
+    chrome_options = utils.get_chrome_options(proxy=proxy)
     chrome_options.page_load_strategy = 'eager'
     driver = Chrome(service=service, options=chrome_options)
     driver.maximize_window()
