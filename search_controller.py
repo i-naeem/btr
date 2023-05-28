@@ -43,6 +43,7 @@ class SearchController:
         for selector in self.search_result_selectors:
             results.extend(self.driver.find_elements(selector.by, selector.value))
         
+        self.search_results = results
         return self.search_results;
     
 
