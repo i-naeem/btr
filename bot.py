@@ -1,7 +1,7 @@
+from utils import use_driver, scroll_to_element, scroll_down, scroll_up
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
-from utils import use_driver
 import random
 
 
@@ -19,15 +19,13 @@ class Bot:
         self.next_page = random.choice(self.pages) if len(self.pages) else None
 
     def goto(self, anchor):
-        # Scroll the the anchor
-        # Click on the anchor
-        # Wait till page the page is load
-        pass
+        scroll_to_element(self.driver, anchor)
+        anchor.click()
 
     def view(self):
-        # Scroll Up and Down
-        # Wait here for around 3 or 4 minutes
-        pass
+        scroll_down(self.driver)
+        scroll_up(self.driver)
+        scroll_down(self.driver)
 
     def _find_pages(self):
         elements = []
@@ -59,7 +57,6 @@ if __name__ == '__main__':
         selectors=selectors
     )
 
-    for anchors in bot.pages:
-        print(anchors.get_attribute('href'))
-
+    bot.goto(random.choice(bot.pages))
+    input('Press enter to quit')
     driver.quit()
