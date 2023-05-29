@@ -1,3 +1,4 @@
+from utils import use_driver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
@@ -42,12 +43,7 @@ class SearchController:
 
 
 if __name__ == '__main__':
-    from selenium.webdriver import Chrome, ChromeOptions
-    from selenium.webdriver.chrome.service import Service
-
-    service = Service(executable_path="./assets/chromedriver.exe")
-    options = ChromeOptions()
-    driver = Chrome(service=service, options=options)
+    driver = use_driver()
 
     controller = SearchController(
         name="Google",
