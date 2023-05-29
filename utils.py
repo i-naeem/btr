@@ -1,5 +1,8 @@
-from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.common.keys import Keys
+import time
 
 
 def use_driver(proxy=None):
@@ -39,3 +42,28 @@ def use_driver(proxy=None):
     driver = Chrome(service=service, options=options)
 
     return driver
+
+
+def scroll_down(driver, pause=0.5) -> None:
+    actions = ActionChains(driver)
+    while True:
+        actions.send_keys(Keys.PAGE_DOWN).perform()
+        time.sleep(pause)
+
+        is_end = driver.execute_script(
+            "return window.innerHeight + window.pageYOffset >= document.body.scrollHeight"
+        )
+
+        # Check if reached the end of the page
+        if is_end:
+            break
+
+
+def scroll_up(driver, pause=0.5) -> None:
+    actions = ActionChains(driver)
+    while True:
+        actions.send_keys(Keys.PAGE_UP).perform()
+        time.sleep(pause)  # Adjust the sleep time as needed
+        # Check if reached the top of the page
+        if driver.execute_script("return window.pageYOffset <= 0"):
+            break
