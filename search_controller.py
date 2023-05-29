@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 class SearchController:
     def __init__(self,
+                 name: str,
                  driver: WebDriver,
 
                  start_url=None,
@@ -14,13 +15,13 @@ class SearchController:
                  searchbar_selector=None,
                  ):
 
+        self.name = name
         self.driver = driver
         self.start_url = start_url
         self.results_selector = results_selector
         self.searchbar_selector = searchbar_selector
 
         self.searchbar = None
-
         self.wait = WebDriverWait(self.driver, 10)
 
     def search(self, q):
@@ -36,6 +37,9 @@ class SearchController:
 
         return search_results
 
+    def __str__(self) -> str:
+        return f'SearchController[{self.name}]'
+
 
 if __name__ == '__main__':
     from selenium.webdriver import Chrome, ChromeOptions
@@ -46,6 +50,7 @@ if __name__ == '__main__':
     driver = Chrome(service=service, options=options)
 
     controller = SearchController(
+        name="Google",
         driver=driver,
         start_url="https://google.com",
         searchbar_selector=(By.NAME, 'q'),
