@@ -67,3 +67,47 @@ def scroll_up(driver, pause=0.5) -> None:
         # Check if reached the top of the page
         if driver.execute_script("return window.pageYOffset <= 0"):
             break
+
+
+def scroll_to_element(driver, element) -> None:
+    driver.execute_script("""
+function scrollToElement(element) {
+  const rect = element.getBoundingClientRect();
+  const scrollY = window.scrollY || window.pageYOffset;
+  const scrollX = window.scrollX || window.pageXOffset;
+  const scrollTargetY = scrollY + rect.top - window.innerHeight / 2;
+  const scrollTargetX = scrollX + rect.left - window.innerWidth / 2;
+  const duration = Math.floor(Math.random() * (2500 - 1000) + 1000)
+  const easing = function(t) {
+    return t * (2 - t);
+  };
+  let start;
+
+  if (!scrollTargetY && !scrollTargetX) {
+    return;
+  }
+
+  window.requestAnimationFrame(function step(timestamp) {
+    if (!start) {
+      start = timestamp;
+    }
+
+    const time = timestamp - start;
+    let percent = Math.min(time / duration, 1);
+    percent = easing(percent);
+
+    window.scrollTo(
+      scrollX + (scrollTargetX - scrollX) * percent,
+      scrollY + (scrollTargetY - scrollY) * percent
+    );
+
+    if (time < duration) {
+      window.requestAnimationFrame(step);
+    }
+  });
+}
+
+
+element = arguments[0]
+scrollToElement(element);""",
+                          element)
