@@ -1,9 +1,11 @@
-from utils import use_driver
+from utils import use_driver, use_logging
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
+
+logger = use_logging()
 
 
 class SearchController:
@@ -15,7 +17,7 @@ class SearchController:
                  results_selector=None,
                  searchbar_selector=None,
                  ):
-
+        logger.info('Creating an instance of Search Controller')
         self.name = name
         self.driver = driver
         self.start_url = start_url
@@ -29,13 +31,18 @@ class SearchController:
         if self.start_url != self.driver.current_url:
             self.driver.get(self.start_url)
 
+        logger.info(f'Locating searchbar using {self.searchbar_selector}')
         self.searchbar = self.wait.until(EC.element_to_be_clickable(self.searchbar_selector))
+
+        logger.info(f'Searching for query {q!r}')
         self.searchbar.send_keys(q, Keys.ENTER)
 
+        logger.info(f'Locating search results {self.results_selector}')
         search_results = self.wait.until(
             EC.presence_of_all_elements_located(self.results_selector)
         )
 
+        logger.info(f'Found {len(search_results)} Search Result(s)')
         return search_results
 
     def __str__(self) -> str:
