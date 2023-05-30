@@ -1,4 +1,5 @@
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.keys import Keys
@@ -8,7 +9,7 @@ import time
 import os
 
 
-def create_file(file_path):
+def create_file(file_path) -> None:
     if not os.path.exists(os.path.dirname(file_path)):
         try:
             os.makedirs(os.path.dirname(file_path))
@@ -19,7 +20,10 @@ def create_file(file_path):
         f.write("")
 
 
-def use_logging(should_stream=True, level=logging.DEBUG):
+def use_logging(should_stream: bool = True,
+                level: logging.DEBUG = logging.DEBUG
+                ) -> logging.Logger:
+
     LOGGER_NAME = "BTR"
     logger = logging.getLogger(LOGGER_NAME)
 
@@ -27,21 +31,21 @@ def use_logging(should_stream=True, level=logging.DEBUG):
     create_file(logs_file)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fhandler = logging.FileHandler(filename=logs_file, mode='a')
+    f_handler = logging.FileHandler(filename=logs_file, mode='a')
 
-    fhandler.setFormatter(formatter)
+    f_handler.setFormatter(formatter)
     logger.setLevel(level=level)
 
-    logger.addHandler(fhandler)
+    logger.addHandler(f_handler)
 
     if should_stream:
-        shandler = logging.StreamHandler()
-        logger.addHandler(shandler)
+        s_handler = logging.StreamHandler()
+        logger.addHandler(s_handler)
 
     return logger
 
 
-def use_driver(proxy=None):
+def use_driver(proxy=None) -> WebDriver:
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
 
