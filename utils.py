@@ -6,7 +6,7 @@ import logging
 import time
 
 
-def use_loggin(should_stream=True, level=logging.DEBUG):
+def use_logging(should_stream=True, level=logging.DEBUG):
     logger = logging.getLogger(__name__)
     logger.setLevel(level=level)
     fhandler = logging.FileHandler(filename='./logs/btr.logs', mode='a')
