@@ -35,12 +35,14 @@ class Bot:
         self.view()
 
     def view(self):
+        # We view all the tabs one by one.
         for window in self.all_tabs:
             self.driver.switch_to.window(window)
             scroll_down(self.driver)
             scroll_up(self.driver)
             scroll_down(self.driver)
 
+        # Check if there more than one tab open then we switch randomly.
         if len(self.all_tabs) != 0:
             self.original_window = random.choice(self.all_tabs)
             for window in self.all_tabs:
@@ -48,6 +50,11 @@ class Bot:
                 self.driver.close()
 
             self.driver.switch_to.window(self.original_window)
+        # else we stay on the original window scroll up and down.
+        else:
+            scroll_down(self.driver)
+            scroll_up(self.driver)
+            scroll_down(self.driver)
 
     def _find_pages(self):
         elements = []
