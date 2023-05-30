@@ -3,14 +3,31 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.keys import Keys
 import logging
+import errno
 import time
+import os
+
+
+def create_file(file_path):
+    if not os.path.exists(os.path.dirname(file_path)):
+        try:
+            os.makedirs(os.path.dirname(file_path))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+    with open(file_path, "w") as f:
+        f.write("")
 
 
 def use_logging(should_stream=True, level=logging.DEBUG):
-    logger = logging.getLogger(__name__)
-    logger.setLevel(level=level)
-    fhandler = logging.FileHandler(filename='./logs/btr.logs', mode='a')
+    LOGGER_NAME = "BTR"
+    logger = logging.getLogger(LOGGER_NAME)
 
+    logs_file = "./logs/btr.logs"
+    create_file(logs_file)
+
+    logger.setLevel(level=level)
+    fhandler = logging.FileHandler(filename=logs_file, mode='a')
     logger.addHandler(fhandler)
 
     if should_stream:
