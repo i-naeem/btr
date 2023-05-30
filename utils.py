@@ -2,7 +2,22 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.keys import Keys
+import logging
 import time
+
+
+def use_loggin(should_stream=True, level=logging.DEBUG):
+    logger = logging.getLogger(__name__)
+    logger.setLevel(level=level)
+    fhandler = logging.FileHandler(filename='./logs/btr.logs', mode='a')
+
+    logger.addHandler(fhandler)
+
+    if should_stream:
+        shandler = logging.StreamHandler()
+        logger.addHandler(shandler)
+
+    return logger
 
 
 def use_driver(proxy=None):
