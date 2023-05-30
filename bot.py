@@ -1,9 +1,11 @@
 from utils import use_driver, scroll_to_element, scroll_down, scroll_up, use_logging
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
+from typing import List, Tuple
 import random
 
 logger = use_logging()
@@ -11,8 +13,9 @@ logger = use_logging()
 
 class Bot:
     def __init__(self,
-                 selectors,
-                 driver: WebDriver):
+                 driver: WebDriver,
+                 selectors: List[Tuple(By.CSS_SELECTOR, str)],
+                 ):
         logger.info('Creating the instance of Bot.')
 
         self.driver = driver
@@ -27,7 +30,7 @@ class Bot:
     def all_tabs(self):
         return [w for w in self.driver.window_handles if w != self.original_window]
 
-    def start(self):
+    def start(self) -> None:
         logger.info('Starting the bot and opening links')
         # Opens Random 5 Pages in New Tab
         for _ in range(5):
@@ -40,7 +43,7 @@ class Bot:
 
         self.view()
 
-    def view(self):
+    def view(self) -> None:
         # We view all the tabs one by one.
         logger.info('Viewing the opened tabs.')
         for window in self.all_tabs:
@@ -61,6 +64,7 @@ class Bot:
 
             logger.info(f'Switching to [{self.original_window}]')
             self.driver.switch_to.window(self.original_window)
+
         # else we stay on the original window scroll up and down.
         else:
             logger.info(f'No opened tabs were found so scrolling through orignal window.')
@@ -68,9 +72,9 @@ class Bot:
             scroll_up(self.driver)
             scroll_down(self.driver)
 
-    def _find_pages(self):
+    def _find_pages(self) -> List[WebElement]:
         elements = []
-        logger.info(f'Findin pages on {self.original_window}')
+        logger.info(f'Finding pages on {self.original_window}')
         for selector in self.selectors:
             try:
                 elements.extend(self.wait.until(EC.presence_of_all_elements_located(selector)))
