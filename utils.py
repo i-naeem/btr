@@ -26,8 +26,12 @@ def use_logging(should_stream=True, level=logging.DEBUG):
     logs_file = "./logs/btr.logs"
     create_file(logs_file)
 
-    logger.setLevel(level=level)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fhandler = logging.FileHandler(filename=logs_file, mode='a')
+
+    fhandler.setFormatter(formatter)
+    logger.setLevel(level=level)
+
     logger.addHandler(fhandler)
 
     if should_stream:
