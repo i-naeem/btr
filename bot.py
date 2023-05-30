@@ -76,14 +76,9 @@ if __name__ == '__main__':
     driver = use_driver()
     driver.get("http://books.toscrape.com")
 
-    selectors = [
-        (By.CSS_SELECTOR, ".product_pod > h3 > a"),
-    ]
+    selectors = [(By.CSS_SELECTOR, ".product_pod > h3 > a"),]
 
-    bot = Bot(
-        driver=driver,
-        selectors=selectors
-    )
+    bot = Bot(driver=driver, selectors=selectors)
 
     bot.start()
     input('Press enter to quit')
