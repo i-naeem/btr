@@ -93,7 +93,9 @@ class Bot:
 
 if __name__ == '__main__':
     from selenium.webdriver.common.by import By
+    from utils import use_logger
 
+    use_logger()
     driver = use_driver()
     driver.get("https://merjob.com")
 

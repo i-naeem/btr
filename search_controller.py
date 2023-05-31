@@ -55,6 +55,9 @@ class SearchController:
 
 
 if __name__ == '__main__':
+    from utils import use_logger
+    use_logger()
+
     driver = use_driver()
 
     controller = SearchController(
