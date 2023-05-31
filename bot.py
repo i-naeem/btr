@@ -79,7 +79,7 @@ class Bot:
             try:
                 elements.extend(self.wait.until(EC.presence_of_all_elements_located(selector)))
             except TimeoutException:
-                logger.error(f'There were no elements found for [ {selector = } ]')
+                self.logger.error(f'There were no elements found for [ {selector = } ]')
 
         return elements
 
