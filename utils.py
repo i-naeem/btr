@@ -27,7 +27,7 @@ def use_logging(should_stream: bool = True,
     LOGGER_NAME = "BTR"
     logger = logging.getLogger(LOGGER_NAME)
 
-    logs_file = "./logs/btr.logs"
+    logs_file = "./logs/btr.log"
     create_file(logs_file)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
