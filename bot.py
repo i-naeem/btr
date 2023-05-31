@@ -5,15 +5,15 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 import random
-
-logger = use_logging()
+import time
 
 
 class Bot:
     def __init__(self,
                  selectors,
                  driver: WebDriver):
-        logger.info('Creating the instance of Bot.')
+        self.logger = use_logging()
+        self.logger.info('Creating the instance of Bot.')
 
         self.driver = driver
         self.selectors = selectors
@@ -28,49 +28,53 @@ class Bot:
         return [w for w in self.driver.window_handles if w != self.original_window]
 
     def start(self):
-        logger.info('Starting the bot and opening links')
+        self.logger.info('Starting the bot and opening links')
         # Opens Random 5 Pages in New Tab
         for _ in range(5):
 
             element = random.choice(self.pages)
             scroll_to_element(self.driver, element)
-
-            logger.info(f'Opening [{element.get_attribute("href")}] in new tab.')
+            time.sleep(2)
+            self.logger.info(f'Opening [{element.get_attribute("href")}] in new tab.')
             element.send_keys(Keys.CONTROL, Keys.ENTER)
+            time.sleep(2)
 
         self.view()
 
     def view(self):
         # We view all the tabs one by one.
-        logger.info('Viewing the opened tabs.')
+        self.logger.info('Viewing the opened tabs.')
         for window in self.all_tabs:
-            logger.info(f'Switching to [{window}] tab.')
+            self.logger.info(f'Switching to [{window}] tab.')
             self.driver.switch_to.window(window)
-            scroll_down(self.driver)
-            scroll_up(self.driver)
-            scroll_down(self.driver)
+            time.sleep(2)
+            scroll_down(self.driver, pause=random.uniform(1, 2))
+            scroll_up(self.driver, pause=random.uniform(1, 2))
+            scroll_down(self.driver, pause=random.uniform(1, 2))
 
         # Check if there more than one tab open then we switch randomly.
         if len(self.all_tabs) != 0:
             self.original_window = random.choice(self.all_tabs)
-            logger.info(f'Changed the original window to [{self.original_window}]')
+            self.logger.info(f'Changed the original window to [{self.original_window}]')
             for window in self.all_tabs:
-                logger.info(f'Closing other opened tabs.')
+                self.logger.info(f'Closing other opened tabs.')
                 self.driver.switch_to.window(window)
+                time.sleep(2)
                 self.driver.close()
 
-            logger.info(f'Switching to [{self.original_window}]')
+            self.logger.info(f'Switching to [{self.original_window}]')
             self.driver.switch_to.window(self.original_window)
+            time.sleep(2)
         # else we stay on the original window scroll up and down.
         else:
-            logger.info(f'No opened tabs were found so scrolling through orignal window.')
-            scroll_down(self.driver)
-            scroll_up(self.driver)
-            scroll_down(self.driver)
+            self.logger.info(f'No opened tabs were found so scrolling through orignal window.')
+            scroll_down(self.driver, pause=random.uniform(1, 2))
+            scroll_up(self.driver, pause=random.uniform(1, 2))
+            scroll_down(self.driver, pause=random.uniform(1, 2))
 
     def _find_pages(self):
         elements = []
-        logger.info(f'Findin pages on {self.original_window}')
+        self.logger.info(f'Findin pages on {self.original_window}')
         for selector in self.selectors:
             try:
                 elements.extend(self.wait.until(EC.presence_of_all_elements_located(selector)))
@@ -87,9 +91,12 @@ if __name__ == '__main__':
     from selenium.webdriver.common.by import By
 
     driver = use_driver()
-    driver.get("http://books.toscrape.com")
+    driver.get("https://merjob.com")
 
-    selectors = [(By.CSS_SELECTOR, ".product_pod > h3 > a"),]
+    selectors = [
+        (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
+        (By.CSS_SELECTOR, ".entry-title a"),
+    ]
 
     bot = Bot(driver=driver, selectors=selectors)
 
