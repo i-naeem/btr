@@ -4,8 +4,12 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.keys import Keys
+from typing import Dict, List
+import constants
 import logging
+import random
 import errno
+import json
 import time
 import os
 
@@ -48,7 +52,11 @@ def use_logger(should_stream: bool = True,
     return logger
 
 
-def use_driver(proxy=None) -> WebDriver:
+def use_driver(
+        proxy_protocol: str = None,
+        proxy_server: str = None,
+        proxy_port: str = None,
+) -> WebDriver:
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
 
@@ -77,9 +85,9 @@ def use_driver(proxy=None) -> WebDriver:
     options.add_argument('--start-maximized')
     options.add_argument('--no-sandbox')
 
-    if proxy:
+    if proxy_protocol and proxy_server and proxy_port:
         options.add_argument(
-            f'--proxy-server={proxy.protocol}://{proxy.server}:{proxy.port}'
+            f'--proxy-server={proxy_protocol}://{proxy_server}:{proxy_port}'
         )
 
     driver = Chrome(service=service, options=options)
@@ -154,3 +162,12 @@ function scrollToElement(element) {
 element = arguments[0]
 scrollToElement(element);""",
                           element)
+
+
+def use_proxies(max: int = 1) -> List[Dict[str, str]]:
+    if os.path.exists(constants.PROXIES_FILE_PATH):
+        # [{"protocol": "http", "server": "192.192.32.1", "port": "8888"},...]
+        with open(constants.PROXIES_FILE_PATH, "r") as f:
+            return random.sample(json.load(f), k=max)
+    else:
+        raise FileNotFoundError
