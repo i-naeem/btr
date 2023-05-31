@@ -1,9 +1,11 @@
-from utils import use_driver, use_logging
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from utils import use_driver, use_logging
+from typing import Tuple, List
 
 
 class SearchController:
@@ -11,9 +13,9 @@ class SearchController:
                  name: str,
                  driver: WebDriver,
 
-                 start_url=None,
-                 results_selector=None,
-                 searchbar_selector=None,
+                 start_url: str = None,
+                 results_selector: Tuple[By.CSS_SELECTOR, str] = None,
+                 searchbar_selector: Tuple[By.CSS_SELECTOR, str] = None,
                  ):
         self.logger = use_logging()
         self.logger.info('Creating an instance of Search Controller')
@@ -27,7 +29,7 @@ class SearchController:
         self.searchbar = None
         self.wait = WebDriverWait(self.driver, 10)
 
-    def search(self, q):
+    def search(self, q: str) -> List[WebElement]:
         if self.start_url != self.driver.current_url:
             self.driver.get(self.start_url)
 
