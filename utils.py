@@ -21,12 +21,15 @@ def create_file(file_path: str) -> None:
         f.write("")
 
 
-def use_logging(should_stream=True, level=logging.DEBUG) -> logging.Logger:
-    LOGGER_NAME = "BTR"
-    logger = logging.getLogger(LOGGER_NAME)
+def use_logger(should_stream: bool = True,
+               level: str = logging.DEBUG,
+               logger_name: str = f"btr__{int(time.time())}.log"
+               ) -> logging.Logger:
 
-    timestamp = int(time.time())
-    logs_file = f"./logs/btr_{timestamp}.log"
+    LOGGER = "BTR"
+    logger = logging.getLogger(LOGGER)
+
+    logs_file = f"./logs/{logger_name}"
 
     create_file(logs_file)
 

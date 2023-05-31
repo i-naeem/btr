@@ -1,11 +1,13 @@
-from utils import use_driver, scroll_to_element, scroll_down, scroll_up, use_logging
+from utils import use_driver, scroll_to_element, scroll_down, scroll_up
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
+from logging import getLogger
 from typing import List
+import constants
 import random
 import time
 
@@ -14,7 +16,7 @@ class Bot:
     def __init__(self,
                  selectors,
                  driver: WebDriver):
-        self.logger = use_logging()
+        self.logger = getLogger(constants.LOGGER)
         self.logger.info('Creating the instance of Bot.')
 
         self.driver = driver

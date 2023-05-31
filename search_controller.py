@@ -4,8 +4,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from utils import use_driver, use_logging
 from typing import Tuple, List
+from logging import getLogger
+from utils import use_driver
+import constants
 
 
 class SearchController:
@@ -14,10 +16,11 @@ class SearchController:
                  driver: WebDriver,
 
                  start_url: str = None,
-                 results_selector: Tuple[By.CSS_SELECTOR, str] = None,
-                 searchbar_selector: Tuple[By.CSS_SELECTOR, str] = None,
+                 results_selector: Tuple[str, str] = None,
+                 searchbar_selector: Tuple[str, str] = None,
                  ):
-        self.logger = use_logging()
+
+        self.logger = getLogger(constants.LOGGER)
         self.logger.info('Creating an instance of Search Controller')
 
         self.name = name
