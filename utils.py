@@ -23,7 +23,9 @@ def use_logging(should_stream=True, level=logging.DEBUG):
     LOGGER_NAME = "BTR"
     logger = logging.getLogger(LOGGER_NAME)
 
-    logs_file = "./logs/btr.logs"
+    timestamp = int(time.time())
+    logs_file = f"./logs/btr_{timestamp}.log"
+
     create_file(logs_file)
 
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
