@@ -1,4 +1,6 @@
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.common.keys import Keys
@@ -8,7 +10,7 @@ import time
 import os
 
 
-def create_file(file_path):
+def create_file(file_path: str) -> None:
     if not os.path.exists(os.path.dirname(file_path)):
         try:
             os.makedirs(os.path.dirname(file_path))
@@ -19,7 +21,7 @@ def create_file(file_path):
         f.write("")
 
 
-def use_logging(should_stream=True, level=logging.DEBUG):
+def use_logging(should_stream=True, level=logging.DEBUG) -> logging.Logger:
     LOGGER_NAME = "BTR"
     logger = logging.getLogger(LOGGER_NAME)
 
@@ -43,7 +45,7 @@ def use_logging(should_stream=True, level=logging.DEBUG):
     return logger
 
 
-def use_driver(proxy=None):
+def use_driver(proxy=None) -> WebDriver:
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
 
@@ -82,7 +84,7 @@ def use_driver(proxy=None):
     return driver
 
 
-def scroll_down(driver, pause=0.5) -> None:
+def scroll_down(driver: WebDriver, pause: float = 0.5) -> None:
     actions = ActionChains(driver)
     while True:
         actions.send_keys(Keys.PAGE_DOWN).perform()
@@ -97,7 +99,7 @@ def scroll_down(driver, pause=0.5) -> None:
             break
 
 
-def scroll_up(driver, pause=0.5) -> None:
+def scroll_up(driver: WebDriver, pause: float = 0.5) -> None:
     actions = ActionChains(driver)
     while True:
         actions.send_keys(Keys.PAGE_UP).perform()
@@ -107,7 +109,7 @@ def scroll_up(driver, pause=0.5) -> None:
             break
 
 
-def scroll_to_element(driver, element) -> None:
+def scroll_to_element(driver: WebDriver, element: WebElement) -> None:
     driver.execute_script("""
 function scrollToElement(element) {
   const rect = element.getBoundingClientRect();
