@@ -24,7 +24,7 @@ class Bot:
         self.original_window = self.driver.current_window_handle
 
         self.wait = WebDriverWait(self.driver, 10)
-        self.pages = self._find_pages()
+        # self.pages = self._find_pages()
         self.ads = self._find_ads()
 
     @property
@@ -76,6 +76,34 @@ class Bot:
             scroll_up(self.driver, pause=random.uniform(1, 2))
             scroll_down(self.driver, pause=random.uniform(1, 2))
 
+    def view_ad(self) -> None:
+        # TODO: Make sure the tab we select to view ad is not our next window tab.
+        source = self.driver.current_url
+        for retry_count in range(5):
+
+            ad_data = random.choice(self.ads)
+
+            try:
+                ad: WebElement = ad_data.get('element')
+                frame = ad_data.get('frame')
+                self.driver.switch_to.frame(frame)
+                self.logger.info('Viewing ad...')
+
+                ad.click()
+                if source == self.driver.current_url:
+                    self.logger.info(f'Trying ad for {retry_count} time(s).')
+                    self.ads = [a for a in self.ads if ad != a]
+                    continue
+                pause = random.uniform(2, 3)
+                scroll_down(self.driver, pause=pause)
+                scroll_up(self.driver, pause=pause)
+                scroll_down(self.driver, pause=pause)
+                self.driver.back()
+
+            except Exception as e:
+                self.logger.error('Failed to view ad.')
+                print(e)
+
     def _find_pages(self) -> List[WebElement]:
         elements = []
         self.logger.info(f'Findin pages on {self.original_window}')
@@ -87,8 +115,36 @@ class Bot:
 
         return elements
 
-    def _find_ads(self):
-        pass
+    def _find_ads(self) -> List[WebElement]:
+        ads = []
+        frames = self.wait.until(
+            EC.presence_of_all_elements_located((By.TAG_NAME, "iframe"))
+        )
+
+        self.logger.info('Switching through frames')
+        for frame in frames:
+            if len(ads) > 8:
+                break
+            self.driver.switch_to.frame(frame)
+            for domain in constants.COMMON_ADS_DOMAINS:
+                self.logger.info(f'Searching ads for {domain = }.')
+                try:
+                    ads_elements = self.wait.until(
+                        EC.presence_of_all_elements_located(
+                            (By.CSS_SELECTOR, f"a[href*='{domain}']")
+                        )
+                    )
+
+                    for el in ads_elements:
+                        ads.append(dict(frame=frame, element=el))
+                except TimeoutException as e:
+                    self.logger.warning(f'Failed to find any ads with {domain} domain.')
+
+            self.driver.switch_to.parent_frame()
+
+        self.driver.switch_to.default_content()
+
+        return ads
 
 
 if __name__ == '__main__':
@@ -97,7 +153,7 @@ if __name__ == '__main__':
 
     use_logger()
     driver = use_driver()
-    driver.get("https://merjob.com")
+    driver.get("https://derajobs.pk")
 
     selectors = [
         (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
@@ -106,6 +162,6 @@ if __name__ == '__main__':
 
     bot = Bot(driver=driver, selectors=selectors)
 
-    bot.start()
+    bot.view_ad()
     input('Press enter to quit')
     driver.quit()
