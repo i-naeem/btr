@@ -2,7 +2,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver import Chrome, ChromeOptions
+from undetected_chromedriver import Chrome, ChromeOptions
 from selenium.webdriver.common.keys import Keys
 from typing import Dict, List
 import constants
