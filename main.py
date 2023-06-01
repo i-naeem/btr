@@ -42,7 +42,7 @@ def use_duckduckgo(proxy={}, selectors=[], q=""):
         raise e
 
 
-proxies = use_proxies(max=3)
+proxies = use_proxies(max=8)
 
 for i in range(5):
     logger.info('Selecting proxy')
