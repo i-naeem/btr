@@ -34,16 +34,24 @@ def use_duckduckgo(proxy={}, selectors=[], q=""):
         driver=driver
     )
 
-    bot.start()
+    try:
+        bot.start(max_tabs_per_page=3)
+        driver.quit()
+    except Exception as e:
+        driver.quit()
+        raise e
 
 
-logger.info('Selecting proxies')
-try:
-    proxies = use_proxies(max=1)
-    for proxy in proxies:
-        logger.info(f'Starting with proxy: {proxy}')
-        use_duckduckgo(proxy, selectors, q="site:merjob.com")
+proxies = use_proxies(max=3)
 
-except Exception as e:
-    logger.warning('failed to load proxies file make sure file exist and have correct path.')
-    print(e)
+for i in range(5):
+    logger.info('Selecting proxy')
+    proxy = proxies[i % 3]
+    try:
+        for proxy in proxies:
+            logger.info(f'Starting with proxy: {proxy}')
+            use_duckduckgo(proxy, selectors, q="site:merjob.com")
+
+    except Exception as e:
+        logger.warning('failed to load proxies file make sure file exist and have correct path.')
+        print(e)

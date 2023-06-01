@@ -31,19 +31,21 @@ class Bot:
     def all_tabs(self):
         return [w for w in self.driver.window_handles if w != self.original_window]
 
-    def start(self) -> None:
+    def start(self, max_tabs_per_page: int = 3) -> None:
         self.logger.info('Starting the bot and opening links')
         # Opens Random 5 Pages in New Tab
-        for _ in range(5):
+        for _ in range(max_tabs_per_page % 5):  # no more than 5
+            for _ in range(max_tabs_per_page):
 
-            element = random.choice(self.pages)
-            scroll_to_element(self.driver, element)
-            time.sleep(2)
-            self.logger.info(f'Opening [{element.get_attribute("href")}] in new tab.')
-            element.send_keys(Keys.CONTROL, Keys.ENTER)
-            time.sleep(2)
+                element = random.choice(self.pages)
+                scroll_to_element(self.driver, element)
+                time.sleep(random.uniform(2, 3))
+                self.logger.info(f'Opening [{element.get_attribute("href")}] in new tab.')
+                element.send_keys(Keys.CONTROL, Keys.ENTER)
+                time.sleep(random.uniform(2, 3))
 
-        self.view()
+            self.view()
+            self.pages = self._find_pages()
 
     def view(self) -> None:
         # We view all the tabs one by one.
@@ -51,10 +53,10 @@ class Bot:
         for window in self.all_tabs:
             self.logger.info(f'Switching to [{window}] tab.')
             self.driver.switch_to.window(window)
-            time.sleep(2)
-            scroll_down(self.driver, pause=random.uniform(1, 2))
-            scroll_up(self.driver, pause=random.uniform(1, 2))
-            scroll_down(self.driver, pause=random.uniform(1, 2))
+            time.sleep(random.uniform(3, 4))
+            scroll_down(self.driver, pause=random.uniform(2, 3))
+            scroll_up(self.driver, pause=random.uniform(2, 3))
+            scroll_down(self.driver, pause=random.uniform(2, 3))
 
         # Check if there more than one tab open then we switch randomly.
         if len(self.all_tabs) != 0:
