@@ -91,6 +91,7 @@ def use_driver(
         )
 
     driver = Chrome(service=service, options=options)
+    driver.maximize_window()
 
     return driver
 
