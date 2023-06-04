@@ -95,7 +95,7 @@ class Bot:
 
         for frame in self.driver.find_elements(by=By.TAG_NAME, value='iframe'):
             self.driver.switch_to.frame(frame)
-            if len(all_ads) > 10:
+            if len(all_ads) > 5:
                 break
 
             elements = find_by_selectors(self.driver, self.advertisement_selectors)
