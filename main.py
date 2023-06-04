@@ -2,14 +2,15 @@ from selenium.webdriver.common.by import By
 from utils import use_driver, use_proxies
 from joblib import delayed, Parallel
 from bot import Bot
+import env
 
 
 def main(proxy):
     protocol = proxy.get('protocol')
     server = proxy.get('server')
     port = proxy.get('port')
-    uname = "cowrnuzy"
-    paswd = "zviptgpzjtmb"
+    uname = env.USERNAME,
+    paswd = env.PASSWORD
 
     driver = use_driver(
         username=uname,
@@ -23,6 +24,7 @@ def main(proxy):
 
     bot = Bot(
         driver=driver,
+        max_views=5,
         page_selectors=[(By.CSS_SELECTOR, '.entry-title')],
     )
 
@@ -37,4 +39,4 @@ def main(proxy):
 
 
 proxies = use_proxies(max=12)
-Parallel(n_jobs=4)(delayed(main)(proxy) for proxy in proxies)
+Parallel(n_jobs=2)(delayed(main)(proxy) for proxy in proxies)

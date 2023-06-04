@@ -32,26 +32,37 @@ class Bot:
         return random.uniform(2, 4)
 
     def start(self):
-        max_retries = 5
-        view_count = 0
-        retries = 0
-        while True:
-            if view_count >= self.max_views or retries >= max_retries:
+        available_pages = self._find_available_pages()
+        random.shuffle(available_pages)
+
+        tab_count = 1
+        for anchor in available_pages:
+            if (tab_count > self.max_views):
                 break
             try:
-                pages = self._find_available_pages()
-                anchor = random.choice(pages)
-                self.view_page(anchor)
-
-                view_count = view_count + 1
-
+                self._click(anchor)
+                tab_count = tab_count + 1
             except Exception as e:
-                self.logger.error(f'There was an error viewing element')
-                retries = retries + 1
+                print("FAILED!!")
+
+        original_window = self.driver.current_window_handle
+        tabs = [w for w in self.driver.window_handles if w != original_window]
+        time.sleep(self.rpause)
+        random.shuffle(tabs)
+        time.sleep(self.rpause)
+        for tab in tabs:
+            self.driver.switch_to.window(tab)
+            time.sleep(self.rpause)
+            self.view_page()
+
+        ad_tab = random.choice(tabs)
+        time.sleep(self.rpause)
+        self.driver.switch_to.window(ad_tab)
+        time.sleep(self.rpause)
 
         self.view_ad()
 
-    def view_ad(self, ):
+    def view_ad(self):
         ads = self._find_available_ads()
         for ad in ads:
             try:
@@ -72,8 +83,7 @@ class Bot:
 
         self.driver.switch_to.default_content()
 
-    def view_page(self, anchor):
-        self._click(anchor)
+    def view_page(self):
         scroll_down(self.driver, self.rpause)
         time.sleep(self.rpause)
         scroll_up(self.driver, self.rpause)
@@ -110,6 +120,7 @@ class Bot:
 
 def main():
     from utils import use_driver, use_proxies
+    import env
 
     proxies = use_proxies(max=1)
     proxy = proxies[0]
@@ -118,15 +129,19 @@ def main():
         port=proxy.get('port'),
         server=proxy.get('server'),
         protocol=proxy.get('protocol'),
-        username="cowrnuzy",
-        password="zviptgpzjtmb",
+        username=env.USERNAME,
+        password=env.PASSWORD,
+
     )
 
-    driver.get('https://www.yourfabulouslives.com/')
+    driver.get('https://governmentjob.pk/')
     bot = Bot(
         driver=driver,
-        max_views=1,
-        page_selectors=[(By.CSS_SELECTOR, '.entry-title a')],
+        max_views=3,
+        page_selectors=[
+            (By.CSS_SELECTOR, '.job-info h3 a'),
+            (By.CSS_SELECTOR, '.job-details-link'),
+        ],
     )
 
     bot.start()
