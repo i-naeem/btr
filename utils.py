@@ -72,6 +72,7 @@ def use_driver(
 
     options.add_argument("--disable-features=IsolateOrigins,site-per-process")
     options.add_argument('--disable-blink-features=AutomationControlled')
+    options.add_argument("--blink-settings=imagesEnabled=false")
     options.add_argument("--disable-seccomp-filter-sandbox")
     options.add_argument("--disable-impl-side-painting")
     options.add_argument('--disable-plugins-discovery')
@@ -192,6 +193,6 @@ def find_by_selectors(
             all_elements.extend(elements)
         except TimeoutException as e:
             logger.warn(f'No Elements ({selector = })')
-            print(e)
 
+    print(f'FOUND ELMENTS: [{len(all_elements)}]')
     return all_elements
