@@ -229,3 +229,4 @@ btrenv
 /assets
 /logs
 /test.py
+/proxies.json
