@@ -102,8 +102,9 @@ class Bot:
 
     def _find_available_ads(self):
         all_ads = []
-
-        for frame in self.driver.find_elements(by=By.TAG_NAME, value='iframe'):
+        frames = self.driver.find_elements(by=By.TAG_NAME, value='iframe')
+        random.shuffle(frames)
+        for frame in frames:
             self.driver.switch_to.frame(frame)
             if len(all_ads) > 5:
                 break

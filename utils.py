@@ -92,6 +92,7 @@ def use_driver(
     options.add_argument('--no-sandbox')
 
     proxy = f"{protocol}://{username}:{password}@{server}:{port}"
+    print(f'Using proxy: {server}:{port}', )
     wire_options = {
         'proxy': {
             'http': proxy,

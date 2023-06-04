@@ -9,23 +9,26 @@ def main(proxy):
     protocol = proxy.get('protocol')
     server = proxy.get('server')
     port = proxy.get('port')
-    uname = env.USERNAME,
-    paswd = env.PASSWORD
+    uname = env.PROXY_USERNAME
+    paswd = env.PROXY_PASSWORD
 
     driver = use_driver(
         username=uname,
         password=paswd,
-        proxy_port=port,
-        proxy_server=server,
-        proxy_protocol=protocol,
+        port=port,
+        server=server,
+        protocol=protocol,
     )
 
-    driver.get('https://www.yourfabulouslives.com/')
+    driver.get('https://www.derajobs.pk/')
 
     bot = Bot(
         driver=driver,
         max_views=5,
-        page_selectors=[(By.CSS_SELECTOR, '.entry-title')],
+        page_selectors=[
+            (By.CSS_SELECTOR, '.job-title h1 a'),
+            (By.CSS_SELECTOR, '.widget_recent_entries li a'),
+        ],
     )
 
     try:
@@ -38,5 +41,5 @@ def main(proxy):
         driver.quit()
 
 
-proxies = use_proxies(max=12)
-Parallel(n_jobs=2)(delayed(main)(proxy) for proxy in proxies)
+proxies = use_proxies(max=1)
+Parallel(n_jobs=1)(delayed(main)(proxy) for proxy in proxies)
