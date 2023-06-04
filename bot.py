@@ -1,5 +1,6 @@
 from utils import find_by_selectors, scroll_down, scroll_up, scroll_to_element
 from constants import DEFAULT_AD_SELECTORS, LOGGER
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from typing import List, Tuple
 import logging
@@ -82,9 +83,9 @@ class Bot:
         time.sleep(self.rpause)
 
     def _click(self, anchor):
-        # element = self.driver.find_element('')
         scroll_to_element(self.driver, anchor)
-        anchor.click()
+        time.sleep(self.rpause)
+        anchor.send_keys(Keys.CONTROL, Keys.ENTER)
         time.sleep(self.rpause)
 
     def _find_available_pages(self):
