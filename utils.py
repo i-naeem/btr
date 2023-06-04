@@ -1,10 +1,13 @@
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.chrome.service import Service
 from undetected_chromedriver import Chrome, ChromeOptions
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import constants
 import logging
 import random
@@ -172,3 +175,23 @@ def use_proxies(max: int = 1) -> List[Dict[str, str]]:
             return random.sample(json.load(f), k=max)
     else:
         raise FileNotFoundError
+
+
+def find_by_selectors(
+        driver: WebDriver,
+        selectors: List[Tuple[str, str]],
+        wait_time: int = 10) -> List[WebElement]:
+    logger = logging.getLogger(constants.LOGGER)
+
+    wait = WebDriverWait(driver, wait_time)
+
+    all_elements = []
+    for selector in selectors:
+        try:
+            elements = wait.until(EC.presence_of_all_elements_located(selector))
+            all_elements.extend(elements)
+        except TimeoutException as e:
+            logger.warn(f'No Elements ({selector = })')
+            print(e)
+
+    return all_elements
