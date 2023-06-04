@@ -50,21 +50,21 @@ class Bot:
                 self.logger.error(f'There was an error viewing [{href}]')
                 retries = retries + 1
 
-        anchors = self._find_available_pages()
-        anchor = random.choice(anchors)
-        self.view_ad(anchor)
+        self.view_ad()
 
-    def view_ad(self, anchor):
-        self.view_page(anchor)
+    def view_ad(self, ):
         ads = self._find_available_ads()
         for ad in ads:
             try:
                 frame = ad.get('frame')
                 element = ad.get('element')
+                scroll_to_element(self.driver, frame)
+                time.sleep(self.rpause)
                 self.driver.switch_to.frame(frame)
                 element.click()
-                time.sleep(random.uniform(4, 5))
+                time.sleep(10)
                 self.driver.back()
+                time.sleep(self.rpause)
                 break
             except Exception as e:
                 self.logger.error('There was an error viewing the ad.')
