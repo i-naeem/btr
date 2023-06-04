@@ -1,8 +1,8 @@
+from seleniumwire.undetected_chromedriver import Chrome, ChromeOptions
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
-from undetected_chromedriver import Chrome, ChromeOptions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.service import Service
@@ -56,9 +56,11 @@ def use_logger(should_stream: bool = True,
 
 
 def use_driver(
-        proxy_protocol: str = None,
-        proxy_server: str = None,
-        proxy_port: str = None,
+        port: str = None,
+        server: str = None,
+        protocol: str = None,
+        username: str = None,
+        password: str = None,
 ) -> WebDriver:
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
@@ -89,12 +91,16 @@ def use_driver(
     options.add_argument('--start-maximized')
     options.add_argument('--no-sandbox')
 
-    if proxy_protocol and proxy_server and proxy_port:
-        options.add_argument(
-            f'--proxy-server={proxy_protocol}://{proxy_server}:{proxy_port}'
-        )
+    proxy = f"{protocol}://{username}:{password}@{server}:{port}"
+    wire_options = {
+        'proxy': {
+            'http': proxy,
+            'https': proxy,
+            'no_proxy': 'localhost,127.0.0.1'
+        }
+    }
 
-    driver = Chrome(service=service, options=options)
+    driver = Chrome(service=service, options=options, seleniumwire_options=wire_options)
     driver.maximize_window()
 
     return driver

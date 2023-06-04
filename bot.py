@@ -46,8 +46,7 @@ class Bot:
                 view_count = view_count + 1
 
             except Exception as e:
-                href = anchor.get_attribute('href')
-                self.logger.error(f'There was an error viewing [{href}]')
+                self.logger.error(f'There was an error viewing element')
                 retries = retries + 1
 
         self.view_ad()
@@ -62,7 +61,7 @@ class Bot:
                 time.sleep(self.rpause)
                 self.driver.switch_to.frame(frame)
                 element.click()
-                time.sleep(10)
+                time.sleep(20)
                 self.driver.back()
                 time.sleep(self.rpause)
                 break
@@ -110,9 +109,19 @@ class Bot:
 
 
 def main():
-    from utils import use_driver
+    from utils import use_driver, use_proxies
 
-    driver = use_driver()
+    proxies = use_proxies(max=1)
+    proxy = proxies[0]
+
+    driver = use_driver(
+        port=proxy.get('port'),
+        server=proxy.get('server'),
+        protocol=proxy.get('protocol'),
+        username="cowrnuzy",
+        password="zviptgpzjtmb",
+    )
+
     driver.get('https://www.yourfabulouslives.com/')
     bot = Bot(
         driver=driver,
@@ -124,9 +133,6 @@ def main():
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except Exception as e:
-        print(e)
+    main()
 
     input("Press enter to quit.")
