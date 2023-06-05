@@ -20,14 +20,17 @@ def main(proxy):
         protocol=protocol,
     )
 
-    driver.get('https://www.derajobs.pk/')
+    q = "site:merjob.com"
+    driver.get(f'https://duckduckgo.com/?va=v&t=ha&q={q}')
 
     bot = Bot(
         driver=driver,
         max_views=5,
         page_selectors=[
-            (By.CSS_SELECTOR, '.job-title h1 a'),
-            (By.CSS_SELECTOR, '.widget_recent_entries li a'),
+            (By.CSS_SELECTOR, '[data-testid="result-title-a"]'),
+            (By.CSS_SELECTOR, '.entry-title a'),
+            (By.CSS_SELECTOR, '.wp-block-latest-posts__post-title'),
+            (By.CSS_SELECTOR, '.cat-item a'),
         ],
     )
 
