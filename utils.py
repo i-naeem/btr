@@ -185,7 +185,7 @@ def use_proxies(max: int = 1) -> List[Dict[str, str]]:
 def find_by_selectors(
         driver: WebDriver,
         selectors: List[Tuple[str, str]],
-        wait_time: int = 10) -> List[WebElement]:
+        wait_time: int = 4) -> List[WebElement]:
     logger = logging.getLogger(constants.LOGGER)
 
     wait = WebDriverWait(driver, wait_time)
