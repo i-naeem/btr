@@ -91,15 +91,17 @@ def use_driver(
     options.add_argument('--start-maximized')
     options.add_argument('--no-sandbox')
 
-    proxy = f"{protocol}://{username}:{password}@{server}:{port}"
-    print(f'Using proxy: {server}:{port}', )
-    wire_options = {
-        'proxy': {
-            'http': proxy,
-            'https': proxy,
-            'no_proxy': 'localhost,127.0.0.1'
+    wire_options = {}
+    if username and password and protocol and server and port:
+        proxy = f"{protocol}://{username}:{password}@{server}:{port}"
+        print(f'Using proxy: {server}:{port}', )
+        wire_options = {
+            'proxy': {
+                'http': proxy,
+                'https': proxy,
+                'no_proxy': 'localhost,127.0.0.1'
+            }
         }
-    }
 
     driver = Chrome(service=service, options=options, seleniumwire_options=wire_options)
     driver.maximize_window()
@@ -108,28 +110,23 @@ def use_driver(
 
 
 def scroll_down(driver: WebDriver, pause: float = 0.5) -> None:
-    actions = ActionChains(driver)
-    while True:
-        actions.send_keys(Keys.PAGE_DOWN).perform()
+    scroll_height = driver.execute_script('return document.body.scrollHeight')
+    scroll_speed = 300  # Pixels
+    scrolled_pixel = scroll_speed
+    while scrolled_pixel < scroll_height:
+        driver.execute_script('return window.scrollTo(0, arguments[0])', scrolled_pixel)
+        scrolled_pixel = scrolled_pixel + scroll_speed
         time.sleep(pause)
-
-        is_end = driver.execute_script(
-            "return window.innerHeight + window.pageYOffset >= document.body.scrollHeight"
-        )
-
-        # Check if reached the end of the page
-        if is_end:
-            break
 
 
 def scroll_up(driver: WebDriver, pause: float = 0.5) -> None:
-    actions = ActionChains(driver)
-    while True:
-        actions.send_keys(Keys.PAGE_UP).perform()
-        time.sleep(pause)  # Adjust the sleep time as needed
-        # Check if reached the top of the page
-        if driver.execute_script("return window.pageYOffset <= 0"):
-            break
+    scroll_y = driver.execute_script('return window.scrollY')
+    scroll_speed = 200
+
+    while scroll_y > 0:
+        driver.execute_script('return window.scrollBy(0, -arguments[0])', scroll_speed)
+        scroll_y = scroll_y - scroll_speed
+        time.sleep(pause)
 
 
 def scroll_to_element(driver: WebDriver, element: WebElement) -> None:
