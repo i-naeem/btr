@@ -33,8 +33,7 @@ def use_logger(should_stream: bool = True,
                logger_name: str = f"btr__{int(time.time())}.log"
                ) -> logging.Logger:
 
-    LOGGER = "BTR"
-    logger = logging.getLogger(LOGGER)
+    logger = logging.getLogger(constants.LOGGER)
 
     logs_file = f"./logs/{logger_name}"
 
@@ -62,6 +61,7 @@ def use_driver(
         username: str = None,
         password: str = None,
 ) -> WebDriver:
+    logger = logging.getLogger(constants.LOGGER)
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
 
@@ -94,7 +94,7 @@ def use_driver(
     wire_options = {}
     if username and password and protocol and server and port:
         proxy = f"{protocol}://{username}:{password}@{server}:{port}"
-        print(f'Using proxy: {server}:{port}', )
+        logger.info(f'Using proxy: {server}:{port}')
         wire_options = {
             'proxy': {
                 'http': proxy,
@@ -111,7 +111,7 @@ def use_driver(
 
 def scroll_down(driver: WebDriver, pause: float = 0.5) -> None:
     scroll_height = driver.execute_script('return document.body.scrollHeight')
-    scroll_speed = 300  # Pixels
+    scroll_speed = 400  # Pixels
     scrolled_pixel = scroll_speed
     while scrolled_pixel < scroll_height:
         driver.execute_script('return window.scrollTo(0, arguments[0])', scrolled_pixel)
@@ -121,7 +121,7 @@ def scroll_down(driver: WebDriver, pause: float = 0.5) -> None:
 
 def scroll_up(driver: WebDriver, pause: float = 0.5) -> None:
     scroll_y = driver.execute_script('return window.scrollY')
-    scroll_speed = 200
+    scroll_speed = 400
 
     while scroll_y > 0:
         driver.execute_script('return window.scrollBy(0, -arguments[0])', scroll_speed)

@@ -1,8 +1,10 @@
 from selenium.webdriver.common.by import By
-from utils import use_driver, use_proxies
+from utils import use_driver, use_proxies, use_logger
 from joblib import delayed, Parallel
 from bot import Bot
 import env
+
+logger = use_logger()
 
 
 def main(proxy):
@@ -26,6 +28,7 @@ def main(proxy):
     bot = Bot(
         driver=driver,
         max_views=5,
+        max_traverse=3,
         page_selectors=[
             (By.CSS_SELECTOR, '[data-testid="result-title-a"]'),
             (By.CSS_SELECTOR, '.entry-title a'),
@@ -36,13 +39,14 @@ def main(proxy):
 
     try:
         bot.start()
-        print("FINISHED")
-    except:
-        print("FAILED!")
+        logger.info('Finished one session.')
+    except Exception as e:
+        print(e)
+        logger.error('FAILED!!!')
 
     finally:
         driver.quit()
 
 
-proxies = use_proxies(max=1)
-Parallel(n_jobs=1)(delayed(main)(proxy) for proxy in proxies)
+proxies = use_proxies(max=6)
+Parallel(n_jobs=2)(delayed(main)(proxy) for proxy in proxies)

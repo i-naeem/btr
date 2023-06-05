@@ -15,52 +15,62 @@ class Bot:
     def __init__(self,
                  driver: WebDriver,
                  page_selectors: List[Tuple[str, str]],
-
                  max_views: int = 5,
+                 max_traverse: int = 1,
                  advertisement_selectors: List[Tuple[str, str]] = DEFAULT_AD_SELECTORS,
                  ):
 
         self.driver = driver
         self.max_views = max_views
+        self.max_traverse = max_traverse
         self.page_selectors = page_selectors
         self.advertisement_selectors = advertisement_selectors
 
+        self.views_count = 0
         self.logger = logging.getLogger(LOGGER)
 
     @property
     def rpause(self):  # random pause value
-        return random.uniform(2, 4)
+        return random.uniform(1, 2)
 
     def start(self):
-        available_pages = self._find_available_pages()
-        random.shuffle(available_pages)
+        for _ in range(self.max_traverse):
+            available_pages = self._find_available_pages()
+            random.shuffle(available_pages)
 
-        tab_count = 1
-        for anchor in available_pages:
-            if (tab_count > self.max_views):
-                break
-            try:
-                self._click(anchor)
-                tab_count = tab_count + 1
-            except Exception as e:
-                print("FAILED!!")
+            tab_count = 1
+            for anchor in available_pages:
+                if (tab_count > self.max_views):
+                    break
+                try:
+                    self._click(anchor)
+                    tab_count = tab_count + 1
+                except Exception as e:
+                    print("FAILED TO OPEN TAB!!")
 
-        original_window = self.driver.current_window_handle
-        tabs = [w for w in self.driver.window_handles if w != original_window]
-        time.sleep(self.rpause)
-        random.shuffle(tabs)
-        time.sleep(self.rpause)
-        for tab in tabs:
-            self.driver.switch_to.window(tab)
+            original_window = self.driver.current_window_handle
+            tabs = [w for w in self.driver.window_handles if w != original_window]
             time.sleep(self.rpause)
-            self.view_page()
+            random.shuffle(tabs)
+            time.sleep(self.rpause)
 
-        ad_tab = random.choice(tabs)
-        time.sleep(self.rpause)
-        self.driver.switch_to.window(ad_tab)
-        time.sleep(self.rpause)
+            for tab in tabs:
+                self.driver.switch_to.window(tab)
+                time.sleep(self.rpause)
+                self.view_page()
 
-        self.view_ad()
+            ad_tab = random.choice(tabs)
+
+            for tab in self.driver.window_handles:
+                if tab == ad_tab:
+                    continue
+
+                self.driver.switch_to.window(tab)
+                time.sleep(self.rpause)
+                self.driver.close()
+
+            self.driver.switch_to.window(ad_tab)
+        # self.view_ad()
 
     def view_ad(self):
         ads = self._find_available_ads()
@@ -85,11 +95,13 @@ class Bot:
 
     def view_page(self):
         scroll_down(self.driver, self.rpause)
-        time.sleep(self.rpause)
         scroll_up(self.driver, self.rpause)
         time.sleep(self.rpause)
         scroll_down(self.driver, self.rpause)
         time.sleep(self.rpause)
+
+        self.views_count = self.views_count + 1
+        self.logger.info(f'Viewed {self.views_count} pages...')
 
     def _click(self, anchor):
         scroll_to_element(self.driver, anchor)
