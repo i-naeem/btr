@@ -33,11 +33,19 @@
 
     - Goto [WebShare.io][webshare]
     - Create an account.
-    - Update the proxies list in `proxies.py` file.
+    - Add the proxies in `./assets/proxies.json` file.
 
 4. ### Start the bot
 
     - run `python main.py` command.
+
+5. ### Configurations
+
+    - `q` refers to the query that would be search on duckduckgo
+    - `max_views` refers to the max tab that will be open at once
+    - `max_traverse` refers to maximum traversal of pages like for example we open 5 pages in one iteration that once traverse in second traverse we will select a random open tab and open another `max_tabs` and so on.
+
+> NOTE: The bot is still in development and I'll probably make it more easy and efficient to configure it but if you wanna test you'd have to bear this for moment.
 
 [python]: https://www.python.org/
 [webshare]: https://webshare.io/
