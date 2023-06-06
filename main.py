@@ -27,8 +27,8 @@ def main(proxy):
 
     bot = Bot(
         driver=driver,
-        max_views=5,
-        max_traverse=3,
+        max_views=3,
+        max_traverse=2,
         page_selectors=[
             (By.CSS_SELECTOR, '[data-testid="result-title-a"]'),
             (By.CSS_SELECTOR, '.entry-title a'),
@@ -48,5 +48,5 @@ def main(proxy):
         driver.quit()
 
 
-proxies = use_proxies(max=6)
-Parallel(n_jobs=2)(delayed(main)(proxy) for proxy in proxies)
+proxies = use_proxies(max=10)
+Parallel(n_jobs=5)(delayed(main)(proxy) for proxy in proxies)
