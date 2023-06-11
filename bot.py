@@ -1,6 +1,6 @@
+from utils.scrolls import scroll_down, scroll_up, scroll_to_element
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import NoSuchWindowException
-from utils.scrolls import scroll_down, scroll_up
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from utils.driver import find_by_selectors
@@ -135,6 +135,7 @@ class Bot:
         random.shuffle(self.available_routes)
         for route in random.sample(self.available_routes, self.max_tabs):
             logging.info(f'Starting new tab of {route.text}...')
+            scroll_to_element(self.driver, route)
             route.send_keys(Keys.CONTROL, Keys.ENTER)
 
         self.traversing_window = self.driver.current_window_handle
@@ -145,6 +146,7 @@ class Bot:
         anchor = getattr(ad, 'anchor', None)
 
         self.driver.switch_to.frame(frame)
+        scroll_to_element(self.driver, frame)
         anchor.click()
         time.sleep(40)
 
