@@ -1,8 +1,14 @@
+from utils.proxies import use_proxies
 from utils.driver import use_driver
 from bot import Bot
 import settings
 import logging
 import random
+import dotenv
+
+
+dotenv.load_dotenv()
+
 
 # Setting Logger
 logging.basicConfig(
@@ -47,4 +53,5 @@ def main():
         driver.quit()
 
 
-main()
+proxies = use_proxies(max=1)
+print(proxies)
