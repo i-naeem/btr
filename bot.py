@@ -11,7 +11,7 @@ import time
 
 
 bot_logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(filename="./bot.log", mode="w", encoding="utf-8")
+file_handler = logging.FileHandler(filename="./logs/bot.log", mode="w", encoding="utf-8")
 log_format = logging.Formatter('%(asctime)s::%(levelname)s::%(message)s')
 bot_logger.addHandler(file_handler)
 
