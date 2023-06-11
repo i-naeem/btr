@@ -65,3 +65,4 @@ function scrollToElement(element) {
 element = arguments[0]
 scrollToElement(element);""",
                           element)
+    time.sleep(2)
