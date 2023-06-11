@@ -5,10 +5,22 @@ from bot import Bot
 import logging
 
 
-logging.basicConfig(filename="btr.log", level=logging.INFO)
+logging.basicConfig(
+    filename="./logs/btr.log",
+    level=logging.INFO,
+    format="%(asctime)s::%(levelname)s::%(filename)s[%(funcName)s]::%(name)s::%(message)s",
+)
+logger = logging.getLogger()
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.DEBUG)
+
+logger.addHandler(stream_handler)
+
 
 # Turning of selenium logger
 LOGGER.setLevel(logging.WARNING)
+
 
 start_url = 'https://books.toscrape.com'
 

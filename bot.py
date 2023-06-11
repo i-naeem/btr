@@ -5,7 +5,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from utils.driver import find_by_selectors
 from typing import List, Tuple
+import logging
 import random
+import time
+
+
+bot_logger = logging.getLogger(__name__)
+file_handler = logging.FileHandler(filename="./bot.log", mode="w", encoding="utf-8")
+log_format = logging.Formatter('%(asctime)s::%(levelname)s::%(message)s')
+bot_logger.addHandler(file_handler)
 
 UP: str = "UP"
 DOWN: str = "DOWN"
@@ -29,6 +37,7 @@ class Bot:
         self.max_tabs = max_tabs
         self.driver = driver
 
+        self.view_count = 0
         self.available_ads = None
         self.available_routes = None
 
@@ -47,8 +56,14 @@ class Bot:
         return windows
 
     def crawling(self):
+        logging.info('Crawling...')
+
+        start_time = time.time()
         for _ in range(self.max_traverse):
             self.start()
+
+        session = time.time() - start_time
+        logging.info(f'We viewed {self.view_count} pages in {session:.3f} seconds.')
 
     def start(self):
         self.available_routes = self.__find_routes()
@@ -56,24 +71,37 @@ class Bot:
         self.scroll(direction=UP)
         self.goto()
 
+        logging.info('Switching an viewing windows...')
         for window in self.new_tabs:
+            self.view_count = self.view_count + 1
+
+            start_time = time.time()
             self.driver.switch_to.window(window)
+
+            logging.info(f'Switched to {self.driver.title}')
             self.scroll(direction=DOWN)
             self.scroll(direction=UP)
 
+            session = time.time() - start_time
+            bot_logger.info(f'{self.driver.current_url} [{session:.3f}]')
+
+        logging.info('Selecting next window')
         self.next_window = random.choice(self.new_tabs)
         self.driver.switch_to.window(self.next_window)
 
         self.close_windows()
 
     def close_windows(self):
+        logging.info('Closing extra windows...')
         for window in self.driver.window_handles:
             if window != self.next_window:
                 try:
                     self.driver.switch_to.window(window)
+                    logging.info(f'Closing {self.driver.title} window...')
                     self.driver.close()
                 except NoSuchWindowException as e:
-                    pass
+                    logging.warning(f'failed to close window')
+                    logging.exception(e)
 
         self.driver.switch_to.window(self.next_window)
         self.original_window = self.next_window
@@ -81,13 +109,16 @@ class Bot:
 
     def scroll(self, direction: str = DOWN):
         if direction == DOWN:
+            logging.info('Scrolling down...')
             scroll_down(self.driver, self.scroll_pause)
         else:
+            logging.info('Scrolling up...')
             scroll_up(self.driver, self.scroll_pause)
 
     def goto(self):
         random.shuffle(self.available_routes)
         for route in random.sample(self.available_routes, self.max_tabs):
+            logging.info(f'Starting new tab of {route.text}...')
             route.send_keys(Keys.CONTROL, Keys.ENTER)
 
         self.traversing_window = self.driver.current_window_handle
