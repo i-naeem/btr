@@ -13,7 +13,7 @@ def use_driver():
     return Chrome(service=s, options=o, seleniumwire_options=so)
 
 
-def find_by_selectors(driver, selectors, timeout=5, max_element=5):
+def find_by_selectors(driver, selectors, timeout=2, max_element=5):
     wait = WebDriverWait(driver, timeout)
 
     all_elements = []
