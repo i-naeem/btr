@@ -19,7 +19,7 @@ class Bot:
 
                  max_tabs: int = 2,
                  max_traverse: int = 3,
-                 scroll_pause: float = None,
+                 scroll_pause: float = random.uniform(1, 2),
                  ad_selectors: List[Tuple[str, str]] = AD_SELECTORS,
                  ):
         self.route_selectors = route_selectors
@@ -30,10 +30,8 @@ class Bot:
         self.driver = driver
 
         self.available_ads = None
-        self.available_routes = self.__find_routes()
+        self.available_routes = None
 
-        # The window where we clicked on the ad.
-        self.ad_window = None
         # The window we will switch to.
         self.next_window = None
         # The window which was used to open tabs.
@@ -53,6 +51,7 @@ class Bot:
             self.start()
 
     def start(self):
+        self.available_routes = self.__find_routes()
         self.scroll(direction=DOWN)
         self.scroll(direction=UP)
         self.goto()
@@ -76,9 +75,9 @@ class Bot:
                 except NoSuchWindowException as e:
                     pass
 
-        self.original_window = None
+        self.driver.switch_to.window(self.next_window)
+        self.original_window = self.next_window
         self.next_window = None
-        self.ad_window = None
 
     def scroll(self, direction: str = DOWN):
         if direction == DOWN:
@@ -100,8 +99,6 @@ class Bot:
 
         self.driver.switch_to.frame(frame)
         anchor.click()
-
-        self.ad_window = self.driver.current_window_handle
 
     def __find_ads(self):
         all_ads = []

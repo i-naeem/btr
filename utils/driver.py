@@ -1,16 +1,14 @@
 from selenium.webdriver.chrome.service import Service
-from seleniumwire.undetected_chromedriver import ChromeOptions, Chrome
+from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 
 
 def use_driver():
-    s = Service(executable_path='./assets/chromedriver.exe')
-    o = ChromeOptions()
-    so = dict()
+    service = Service(executable_path="./assets/chromedriver.exe")
 
-    return Chrome(service=s, options=o, seleniumwire_options=so)
+    return Chrome(service=service)
 
 
 def find_by_selectors(driver, selectors, timeout=2, max_element=5):
