@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.service import Service
 import logging
 
 
-def use_driver() -> WebDriver:
+def use_driver(proxy) -> WebDriver:
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
 
@@ -38,6 +38,16 @@ def use_driver() -> WebDriver:
     options.add_argument('--no-sandbox')
 
     wire_options = {}
+
+    if proxy.username and proxy.password:
+        logging.info(f'Using proxy: {proxy.server}:{proxy.port}')
+        wire_options = {
+            'proxy': {
+                'http': proxy._proxy_url(),
+                'https': proxy._proxy_url(),
+                'no_proxy': 'localhost,127.0.0.1'
+            }
+        }
 
     driver = Chrome(service=service, options=options, seleniumwire_options=wire_options)
     driver.maximize_window()

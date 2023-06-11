@@ -28,8 +28,8 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('seleniumwire').level = logging.ERROR
 
 
-def main():
-    driver = use_driver()
+def main(proxy):
+    driver = use_driver(proxy)
     data = random.choice(settings.BLOG_DERA_JOBS_PK_DATA)
 
     start_url = data.get('start_url')
@@ -53,5 +53,7 @@ def main():
         driver.quit()
 
 
-proxies = use_proxies(max=1)
-print(proxies)
+if __name__ == '__main__':
+    for proxy in use_proxies():
+        driver = use_driver(proxy)
+        driver.get('https://browserleaks.org/ip')
