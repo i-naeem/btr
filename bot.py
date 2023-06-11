@@ -1,3 +1,4 @@
+from utils.scrolls import scroll_down, scroll_up
 import random
 
 UP = "UP"
