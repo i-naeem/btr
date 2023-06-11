@@ -9,29 +9,33 @@ import logging
 import random
 import time
 
-
+# Setting up logger
 bot_logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(filename="./logs/bot.log", mode="w", encoding="utf-8")
+file_handler = logging.FileHandler(filename="./logs/bot.log", mode="a", encoding="utf-8")
 log_format = logging.Formatter('%(asctime)s::%(levelname)s::%(message)s')
 bot_logger.addHandler(file_handler)
 
+# Useful Constants
 UP: str = "UP"
 DOWN: str = "DOWN"
-AD_SELECTORS: List[Tuple[str, str]] = [(By.CSS_SELECTOR, ".ad")]
+SELECTOR_LIST_TYPE = List[Tuple[str, str]]
+AD_SELECTORS: SELECTOR_LIST_TYPE = [
+    (By.CSS_SELECTOR, 'a[href*="adclick"]'),
+    (By.CSS_SELECTOR, 'a[href*="doubleclick"]'),
+    (By.CSS_SELECTOR, 'a[href*="googleadservice"]'),
+]
 
 
 class Bot:
     def __init__(self,
                  driver: WebDriver,
-                 route_selectors: List[Tuple[str, str]],
+                 route_selectors: SELECTOR_LIST_TYPE,
 
                  max_tabs: int = 2,
                  max_traverse: int = 3,
-                 scroll_pause: float = random.uniform(1, 2),
-                 ad_selectors: List[Tuple[str, str]] = AD_SELECTORS,
+                 ad_selectors: SELECTOR_LIST_TYPE = AD_SELECTORS,
                  ):
         self.route_selectors = route_selectors
-        self.scroll_pause = scroll_pause
         self.ad_selectors = ad_selectors
         self.max_traverse = max_traverse
         self.max_tabs = max_tabs
@@ -47,6 +51,8 @@ class Bot:
         self.traversing_window = self.driver.current_window_handle
         # The starting window of the bot.
         self.original_window = self.driver.current_window_handle
+
+        self.RANDOM_SLEEP_TIMES = [0.5, 3, 1, 1.5, 2, 2.5]
 
     @property
     def new_tabs(self):
@@ -68,8 +74,11 @@ class Bot:
     def start(self):
         self.available_routes = self.__find_routes()
         self.scroll(direction=DOWN)
+        self.__pause()
         self.scroll(direction=UP)
+        self.__pause()
         self.goto()
+        self.__pause()
 
         logging.info('Switching an viewing windows...')
         for window in self.new_tabs:
@@ -77,10 +86,13 @@ class Bot:
 
             start_time = time.time()
             self.driver.switch_to.window(window)
+            self.__pause()
 
             logging.info(f'Switched to {self.driver.title}')
             self.scroll(direction=DOWN)
+            self.__pause()
             self.scroll(direction=UP)
+            self.__pause()
 
             session = time.time() - start_time
             bot_logger.info(f'{self.driver.current_url} [{session:.3f}]')
@@ -88,6 +100,7 @@ class Bot:
         logging.info('Selecting next window')
         self.next_window = random.choice(self.new_tabs)
         self.driver.switch_to.window(self.next_window)
+        self.__pause()
 
         self.close_windows()
 
@@ -97,8 +110,10 @@ class Bot:
             if window != self.next_window:
                 try:
                     self.driver.switch_to.window(window)
+                    self.__pause()
                     logging.info(f'Closing {self.driver.title} window...')
                     self.driver.close()
+                    self.__pause()
                 except NoSuchWindowException as e:
                     logging.warning(f'failed to close window')
                     logging.exception(e)
@@ -108,12 +123,13 @@ class Bot:
         self.next_window = None
 
     def scroll(self, direction: str = DOWN):
+        pause = random.choice([0.3, 0.5, 0.8, 1, 1.5])
         if direction == DOWN:
             logging.info('Scrolling down...')
-            scroll_down(self.driver, self.scroll_pause)
+            scroll_down(self.driver, pause)
         else:
             logging.info('Scrolling up...')
-            scroll_up(self.driver, self.scroll_pause)
+            scroll_up(self.driver, pause)
 
     def goto(self):
         random.shuffle(self.available_routes)
@@ -130,6 +146,7 @@ class Bot:
 
         self.driver.switch_to.frame(frame)
         anchor.click()
+        time.sleep(40)
 
     def __find_ads(self):
         all_ads = []
@@ -146,3 +163,6 @@ class Bot:
     def __find_routes(self):
         # TODO: Change the max to maximum tab opens.
         return find_by_selectors(self.driver, self.route_selectors)
+
+    def __pause(self):
+        time.sleep(random.choice(self.RANDOM_SLEEP_TIMES))
