@@ -1,3 +1,3 @@
 @echo off
 
-.\btrenv\scripts\activate
+.\env\scripts\activate
