@@ -32,6 +32,8 @@ def main(proxy):
     driver = use_driver(proxy)
     data = random.choice(settings.BLOG_DERA_JOBS_PK_DATA)
 
+    source = data.get('source')
+    logging.info(f'Selected Source: {source}')
     start_url = data.get('start_url')
     route_selectors = data.get('route_selectors')
 

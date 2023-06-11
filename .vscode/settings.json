@@ -8,6 +8,7 @@
     "adclick",
     "chromedriver",
     "DERA",
+    "derajobs",
     "dotenv",
     "doubleclick",
     "duckduckgo",
@@ -27,6 +28,7 @@
     "seccomp",
     "seleniumwire",
     "techwispy",
+    "testid",
     "webelement",
     "webrtc",
     "yourfabulouslives"
