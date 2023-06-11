@@ -61,15 +61,22 @@ class Bot:
         random.shuffle(windows)
         return windows
 
-    def crawling(self):
+    def crawling(self, click_on_ad: False):
         logging.info('Crawling...')
 
         start_time = time.time()
-        for _ in range(self.max_traverse):
-            self.start()
+        # for _ in range(self.max_traverse):
+        #     self.start()
 
         session = time.time() - start_time
         logging.info(f'We viewed {self.view_count} pages in {session:.3f} seconds.')
+
+        if click_on_ad:
+            logging.info('Trying to click on ad...')
+            self.available_ads = self.__find_ads()
+            random.shuffle(self.available_ads)
+            self.goto_ad()
+            logging.info('Ad Viewing Completed')
 
     def start(self):
         self.available_routes = self.__find_routes()
@@ -98,7 +105,13 @@ class Bot:
             bot_logger.info(f'{self.driver.current_url} [{session:.3f}]')
 
         logging.info('Selecting next window')
-        self.next_window = random.choice(self.new_tabs)
+
+        try:
+            self.next_window = random.choice(self.new_tabs)
+        except Exception as e:
+            logging.info('failed to switch to next window staying on the same window')
+            self.next_window = self.driver.current_window_handle
+
         self.driver.switch_to.window(self.next_window)
         self.__pause()
 
@@ -141,14 +154,29 @@ class Bot:
         self.traversing_window = self.driver.current_window_handle
 
     def goto_ad(self):
-        ad = random.choice(self.available_ads)
-        frame = getattr(ad, 'iframe', None)
-        anchor = getattr(ad, 'anchor', None)
+        random.shuffle(self.available_ads)
+        for ad in self.available_ads:
 
-        self.driver.switch_to.frame(frame)
-        scroll_to_element(self.driver, frame)
-        anchor.click()
-        time.sleep(40)
+            try:
+                frame = ad.get('iframe')
+                anchor = ad.get('anchor')
+
+                logging.info('Switching IFRAME..')
+                scroll_to_element(self.driver, frame)
+                self.driver.switch_to.frame(frame)
+                anchor.click()
+                time.sleep(40)
+                self.__pause()
+                return
+            except Exception as e:
+
+                logging.warning('Failed to click on ad trying again')
+                logging.exception(e)
+
+            finally:
+                self.driver.switch_to.default_content()
+
+        self.driver.switch_to.default_content()
 
     def __find_ads(self):
         all_ads = []
@@ -157,10 +185,14 @@ class Bot:
                 break
 
             self.driver.switch_to.frame(iframe)
-            elements = find_by_selectors(self.driver, self.ad_route_selectors)
+            elements = find_by_selectors(self.driver, self.ad_selectors)
             # Change the element to dictionary { iframe: active_iframe, anchor: anchor_element}
             all_ads.extend([dict(iframe=iframe, anchor=element) for element in elements])
             self.driver.switch_to.default_content()
+
+        self.driver.switch_to.default_content()
+
+        return all_ads
 
     def __find_routes(self):
         # TODO: Change the max to maximum tab opens.

@@ -44,16 +44,16 @@ def main(proxy):
     )
 
     try:
-        bot.crawling()
+        bot.crawling(click_on_ad=True)
     except Exception as e:
         logging.error('failed to finish session')
         logging.exception(e)
 
     finally:
+        logging.info('Closing Browser....')
         driver.quit()
 
 
 if __name__ == '__main__':
     for proxy in use_proxies():
-        driver = use_driver(proxy)
-        driver.get('https://browserleaks.org/ip')
+        main(proxy)

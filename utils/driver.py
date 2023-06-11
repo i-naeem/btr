@@ -61,12 +61,12 @@ def find_by_selectors(driver, selectors, timeout=2, max_element=5):
     all_elements = []
     for selector in selectors:
         if len(all_elements) > max_element:
-            return all_elements
+            break
         try:
             elements = wait.until(EC.presence_of_all_elements_located(selector))
             all_elements.extend(elements)
         except TimeoutException as e:
             logging.warning(f'TIMEOUT: [{selector}]')
-            logging.exception(e)
 
+    logging.info(f'FOUND ELEMENTS: [{len(all_elements)}]')
     return all_elements

@@ -33,5 +33,5 @@ BLOG_DERA_JOBS_PK_DATA = [
             (By.CSS_SELECTOR, "p[role='presentation'] a"),
             (By.CSS_SELECTOR, ".entry-title a"),
         ]
-    }
+    },
 ]
