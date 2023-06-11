@@ -15,7 +15,7 @@ class Bot:
     def __init__(self,
                  driver: WebDriver,
                  page_selectors: List[Tuple[str, str]],
-                 max_views: int = 5,
+                 max_views: int = 3,
                  max_traverse: int = 1,
                  advertisement_selectors: List[Tuple[str, str]] = DEFAULT_AD_SELECTORS,
                  ):
@@ -70,7 +70,7 @@ class Bot:
                 self.driver.close()
 
             self.driver.switch_to.window(ad_tab)
-        # self.view_ad()
+        self.view_ad()
 
     def view_ad(self):
         ads = self._find_available_ads()
@@ -82,7 +82,7 @@ class Bot:
                 time.sleep(self.rpause)
                 self.driver.switch_to.frame(frame)
                 element.click()
-                time.sleep(20)
+                time.sleep(75)
                 self.driver.back()
                 time.sleep(self.rpause)
                 break
@@ -96,8 +96,6 @@ class Bot:
     def view_page(self):
         scroll_down(self.driver, self.rpause)
         scroll_up(self.driver, self.rpause)
-        time.sleep(self.rpause)
-        scroll_down(self.driver, self.rpause)
         time.sleep(self.rpause)
 
         self.views_count = self.views_count + 1
@@ -142,18 +140,19 @@ def main():
         port=proxy.get('port'),
         server=proxy.get('server'),
         protocol=proxy.get('protocol'),
-        username=env.USERNAME,
-        password=env.PASSWORD,
+        username=env.PROXY_USERNAME,
+        password=env.PROXY_PASSWORD,
 
     )
 
-    driver.get('https://governmentjob.pk/')
+    driver.get('https://derajobs.pk/')
     bot = Bot(
         driver=driver,
-        max_views=3,
+        max_views=1,
+        max_traverse=1,
         page_selectors=[
-            (By.CSS_SELECTOR, '.job-info h3 a'),
-            (By.CSS_SELECTOR, '.job-details-link'),
+            (By.CSS_SELECTOR, '.entry-title a'),
+            (By.CSS_SELECTOR, '.cat-item'),
         ],
     )
 

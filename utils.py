@@ -29,7 +29,7 @@ def create_file(file_path: str) -> None:
 
 
 def use_logger(should_stream: bool = True,
-               level: str = logging.DEBUG,
+               level: str = logging.INFO,
                logger_name: str = f"btr__{int(time.time())}.log"
                ) -> logging.Logger:
 
@@ -74,7 +74,7 @@ def use_driver(
 
     options.add_argument("--disable-features=IsolateOrigins,site-per-process")
     options.add_argument('--disable-blink-features=AutomationControlled')
-    options.add_argument("--blink-settings=imagesEnabled=false")
+    # options.add_argument("--blink-settings=imagesEnabled=false")
     options.add_argument("--disable-seccomp-filter-sandbox")
     options.add_argument("--disable-impl-side-painting")
     options.add_argument('--disable-plugins-discovery')

@@ -22,18 +22,18 @@ def main(proxy):
         protocol=protocol,
     )
 
-    q = "site:merjob.com"
+    q = "site:blog.derajobs.pk"
     driver.get(f'https://duckduckgo.com/?va=v&t=ha&q={q}')
 
     bot = Bot(
         driver=driver,
-        max_views=3,
-        max_traverse=2,
+        max_views=2,
+        max_traverse=3,
         page_selectors=[
             (By.CSS_SELECTOR, '[data-testid="result-title-a"]'),
             (By.CSS_SELECTOR, '.entry-title a'),
-            (By.CSS_SELECTOR, '.wp-block-latest-posts__post-title'),
-            (By.CSS_SELECTOR, '.cat-item a'),
+            (By.CSS_SELECTOR, '.entry-content a[href*="blog.derajobs.pk"]'),
+            (By.ID, 'menu-item-17'),
         ],
     )
 
@@ -48,5 +48,8 @@ def main(proxy):
         driver.quit()
 
 
-proxies = use_proxies(max=21)
-Parallel(n_jobs=3)(delayed(main)(proxy) for proxy in proxies)
+proxies = use_proxies(max=5)
+
+for proxy in proxies:
+    main(proxy)
+#Parallel(n_jobs=1)(delayed(main)(proxy) for proxy in proxies)
