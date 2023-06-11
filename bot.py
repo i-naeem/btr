@@ -6,14 +6,17 @@ DOWN = "DOWN"
 
 
 class Bot:
-    def __init__(self, driver, scroll_speed):
+    def __init__(self, driver, scroll_pause):
         self.driver = driver
-        self.scroll_speed = scroll_speed
+        self.scroll_pause = scroll_pause
 
         self.anchors = None
 
     def scroll(self, direction: str = DOWN):
-        pass
+        if direction == DOWN:
+            scroll_down(self.driver, self.scroll_pause)
+        else:
+            scroll_up(self.driver, self.scroll_pause)
 
     def click(self):
         anchor = random.choice(self.anchors)
