@@ -27,5 +27,5 @@ class Bot:
         if frame is not None:  # Check if we clicked or not?
             self.driver.switch_to.frame(frame)
             anchor.click()
-
-        anchor.click()
+        else:
+            anchor.click()
