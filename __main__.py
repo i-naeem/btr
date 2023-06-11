@@ -1,3 +1,4 @@
+from selenium.webdriver.common.by import By
 from utils.driver import use_driver
 from bot import Bot
 
