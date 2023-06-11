@@ -1,8 +1,8 @@
 from utils.scrolls import scroll_down, scroll_up
 import random
 
-UP = "UP"
-DOWN = "DOWN"
+UP: str = "UP"
+DOWN: str = "DOWN"
 
 
 class Bot:
@@ -10,7 +10,7 @@ class Bot:
         self.driver = driver
         self.scroll_pause = scroll_pause
 
-        self.anchors = None
+        self.available_routes = None
 
     def scroll(self, direction: str = DOWN):
         if direction == DOWN:
@@ -18,6 +18,14 @@ class Bot:
         else:
             scroll_up(self.driver, self.scroll_pause)
 
-    def click(self):
-        anchor = random.choice(self.anchors)
+    def goto(self):
+        route = random.choice(self.available_routes)
+
+        frame = getattr(route, 'iframe', None)
+        anchor = getattr(route, 'anchor')
+
+        if frame is not None:  # Check if we clicked or not?
+            self.driver.switch_to.frame(frame)
+            anchor.click()
+
         anchor.click()
