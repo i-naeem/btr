@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.DEBUG)
 logging.getLogger('seleniumwire').level = logging.ERROR
 
 
-def main(proxy):
+def main(proxy, click_on_ad=False):
     driver = use_driver(proxy)
     data = random.choice(settings.BLOG_DERA_JOBS_PK_DATA)
 
@@ -46,7 +46,7 @@ def main(proxy):
     )
 
     try:
-        bot.crawling(click_on_ad=True)
+        bot.crawling(click_on_ad=click_on_ad)
     except Exception as e:
         logging.error('failed to finish session')
         logging.exception(e)
@@ -58,4 +58,4 @@ def main(proxy):
 
 if __name__ == '__main__':
     for proxy in use_proxies():
-        main(proxy)
+        main(proxy, click_on_ad=False)

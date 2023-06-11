@@ -1,5 +1,6 @@
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
+import random
 import time
 
 
@@ -65,4 +66,4 @@ function scrollToElement(element) {
 element = arguments[0]
 scrollToElement(element);""",
                           element)
-    time.sleep(2)
+    time.sleep(random.uniform(2, 3))

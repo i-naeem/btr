@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
-MAX_TRAVERSE = 1
-MAX_TABS = 1
+MAX_TRAVERSE = 2
+MAX_TABS = 5
 
 
 DERA_JOBS_PK_DATA = [
