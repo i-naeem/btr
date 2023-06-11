@@ -65,8 +65,8 @@ class Bot:
         logging.info('Crawling...')
 
         start_time = time.time()
-        # for _ in range(self.max_traverse):
-        #     self.start()
+        for _ in range(self.max_traverse):
+            self.start()
 
         session = time.time() - start_time
         logging.info(f'We viewed {self.view_count} pages in {session:.3f} seconds.')
