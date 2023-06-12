@@ -8,10 +8,15 @@ from typing import List, Tuple
 import logging
 import random
 import time
+import sys
+
+logger_n = sys.argv[1]
 
 # Setting up logger
-bot_logger = logging.getLogger(__name__)
-file_handler = logging.FileHandler(filename="./logs/bot.log", mode="a", encoding="utf-8")
+bot_logger = logging.getLogger(f"{__name__}_{logger_n}")
+file_handler = logging.FileHandler(
+    filename=f"./logs/bot_{logger_n}.log", mode="a", encoding="utf-8"
+)
 log_format = logging.Formatter('%(asctime)s::%(levelname)s::%(message)s')
 bot_logger.addHandler(file_handler)
 

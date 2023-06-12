@@ -5,14 +5,16 @@ import settings
 import logging
 import random
 import dotenv
+import sys
 
+logger_n = sys.argv[1]
 
 dotenv.load_dotenv()
 
 
 # Setting Logger
 logging.basicConfig(
-    filename="./logs/btr.log",
+    filename=f"./logs/btr_{logger_n}.log",
     level=logging.INFO,
     encoding="utf-8",
     format="%(asctime)s::%(levelname)s::%(filename)s[%(funcName)s]::%(name)s::%(message)s",

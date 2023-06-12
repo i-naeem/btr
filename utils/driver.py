@@ -37,6 +37,7 @@ def use_driver(proxy) -> WebDriver:
     options.add_argument('--disable-logging')
     options.add_argument('--start-maximized')
     options.add_argument('--no-sandbox')
+    options.version_main = 114
 
     wire_options = {}
 
@@ -50,7 +51,12 @@ def use_driver(proxy) -> WebDriver:
             }
         }
 
-    driver = Chrome(service=service, options=options, seleniumwire_options=wire_options)
+    driver = Chrome(
+        headless=True,
+        service=service,
+        options=options,
+        seleniumwire_options=wire_options,
+    )
     driver.maximize_window()
 
     return driver
