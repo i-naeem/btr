@@ -7,7 +7,7 @@ mkdir assets
 mkdir logs
 
 @REM Creates a virtual environment for the project
-python -m venv btrenv
+python -m venv env
 
 @REM Actibvate the virtual env
 activate.bat
