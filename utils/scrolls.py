@@ -66,4 +66,4 @@ function scrollToElement(element) {
 element = arguments[0]
 scrollToElement(element);""",
                           element)
-    time.sleep(random.uniform(2, 3))
+    time.sleep(random.uniform(1.4, 2.4))

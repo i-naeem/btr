@@ -17,6 +17,7 @@ def use_driver(proxy) -> WebDriver:
         "webrtc.nonproxied_udp_enabled": False,
     }
     options.add_experimental_option('prefs', prefs)
+    options.page_load_strategy = "eager"
 
     options.add_argument("--disable-features=IsolateOrigins,site-per-process")
     options.add_argument('--disable-blink-features=AutomationControlled')

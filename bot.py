@@ -52,7 +52,7 @@ class Bot:
         # The starting window of the bot.
         self.original_window = self.driver.current_window_handle
 
-        self.RANDOM_SLEEP_TIMES = [1.5, 2.3, 2.5, 2.6, 2.9, 3.1, 3.3]
+        self.RANDOM_SLEEP_TIMES = [0.5, 1.0, 1.5, 2., 2.5]
 
     @property
     def new_tabs(self):
@@ -81,7 +81,6 @@ class Bot:
     def start(self):
         self.available_routes = self.__find_routes()
         self.scroll(direction=DOWN)
-        self.scroll(direction=UP)
         self.goto()
 
         logging.info('Switching an viewing windows...')
@@ -94,9 +93,6 @@ class Bot:
 
             logging.info(f'Switched to {self.driver.title}')
             self.scroll(direction=DOWN)
-            self.__pause()
-            self.scroll(direction=UP)
-            self.__pause()
 
             session = time.time() - start_time
             bot_logger.info(f'{self.driver.current_url} [{session:.3f}]')
@@ -133,15 +129,15 @@ class Bot:
         self.next_window = None
 
     def scroll(self, direction: str = DOWN):
-        pause = random.choice([0.3, 0.5, 0.8, 1, 1.5])
+        pause = random.choice([0.3, 0.5, 0.8, 1])
         if direction == DOWN:
             logging.info('Scrolling down...')
             scroll_down(self.driver, pause)
-            time.sleep(random.uniform(2, 3))
+            self.__pause()
         else:
             logging.info('Scrolling up...')
             scroll_up(self.driver, pause)
-            time.sleep(random.uniform(2, 3))
+            self.__pause()
 
     def goto(self):
         random.shuffle(self.available_routes)
@@ -152,6 +148,7 @@ class Bot:
             logging.info(f'Starting new tab of {route.text}...')
             scroll_to_element(self.driver, route)
             route.send_keys(Keys.CONTROL, Keys.ENTER)
+            self.__pause()
             tc = tc + 1
 
         self.traversing_window = self.driver.current_window_handle
