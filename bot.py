@@ -86,6 +86,7 @@ class Bot:
     def start(self):
         self.available_routes = self.__find_routes()
         self.scroll(direction=DOWN)
+        self.scroll(direction=UP)
         self.goto()
 
         logging.info('Switching an viewing windows...')
@@ -98,6 +99,7 @@ class Bot:
 
             logging.info(f'Switched to {self.driver.title}')
             self.scroll(direction=DOWN)
+            self.scroll(direction=UP)
 
             session = time.time() - start_time
             bot_logger.info(f'{self.driver.current_url} [{session:.3f}]')
@@ -185,7 +187,9 @@ class Bot:
 
     def __find_ads(self):
         all_ads = []
-        for iframe in self.driver.find_elements(by=By.TAG_NAME, value="iframe"):
+        iframes = self.driver.find_elements(by=By.TAG_NAME, value="iframe")
+        random.shuffle(iframes)
+        for iframe in iframes:
             if len(all_ads) >= 4:
                 break
 
@@ -201,7 +205,12 @@ class Bot:
 
     def __find_routes(self):
         # TODO: Change the max to maximum tab opens.
-        return find_by_selectors(self.driver, self.route_selectors)
+        return find_by_selectors(
+            timeout=5,
+            driver=self.driver,
+            max_element=self.max_tabs,
+            selectors=self.route_selectors,
+        )
 
     def __pause(self):
         time.sleep(random.choice(self.RANDOM_SLEEP_TIMES))

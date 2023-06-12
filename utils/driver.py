@@ -4,10 +4,11 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.service import Service
+import random
 import logging
 
 
-def use_driver(proxy) -> WebDriver:
+def use_driver(proxy, ua) -> WebDriver:
     service = Service(executable_path="./assets/chromedriver.exe")
     options = ChromeOptions()
 
@@ -37,6 +38,9 @@ def use_driver(proxy) -> WebDriver:
     options.add_argument('--disable-logging')
     options.add_argument('--start-maximized')
     options.add_argument('--no-sandbox')
+
+    options.add_argument(f"--user-agent={ua}")
+
     options.version_main = 114
 
     wire_options = {}
@@ -52,7 +56,7 @@ def use_driver(proxy) -> WebDriver:
         }
 
     driver = Chrome(
-        headless=True,
+        headless=False,
         service=service,
         options=options,
         seleniumwire_options=wire_options,
@@ -75,5 +79,6 @@ def find_by_selectors(driver, selectors, timeout=2, max_element=5):
         except TimeoutException as e:
             logging.warning(f'TIMEOUT: [{selector}]')
 
+    random.shuffle(all_elements)
     logging.info(f'FOUND ELEMENTS: [{len(all_elements)}]')
     return all_elements

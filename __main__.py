@@ -6,6 +6,13 @@ import logging
 import random
 import dotenv
 import sys
+import json
+
+user_agents_file = "./user_agents.json"
+
+user_agents_list = []
+with open(user_agents_file) as f:
+    user_agents_list = json.loads(f.read())
 
 logger_n = sys.argv[1]
 
@@ -31,7 +38,9 @@ logging.getLogger('seleniumwire').level = logging.ERROR
 
 
 def main(proxy, click_on_ad=False):
-    driver = use_driver(proxy)
+    ua = random.choice(user_agents_list).get('ua')
+    logging.info(f'Using User Agent: {ua}')
+    driver = use_driver(proxy=proxy, ua=ua)
     data = random.choice(settings.BLOG_DERA_JOBS_PK_DATA)
 
     source = data.get('source')
@@ -60,4 +69,4 @@ def main(proxy, click_on_ad=False):
 
 if __name__ == '__main__':
     for proxy in use_proxies(max=100):
-        main(proxy, click_on_ad=True)
+        main(proxy, click_on_ad=False)
