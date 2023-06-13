@@ -69,4 +69,4 @@ def main(proxy, click_on_ad=False):
 
 if __name__ == '__main__':
     for proxy in use_proxies(max=100):
-        main(proxy, click_on_ad=False)
+        main(proxy, click_on_ad=True)

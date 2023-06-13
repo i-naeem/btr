@@ -88,7 +88,7 @@ class Bot:
         self.scroll(direction=DOWN)
         self.goto()
 
-        logging.info('Switching an viewing windows...')
+        logging.info('Switching and viewing windows...')
         for window in self.new_tabs:
             self.view_count = self.view_count + 1
 
@@ -121,7 +121,6 @@ class Bot:
             if window != self.next_window:
                 try:
                     self.driver.switch_to.window(window)
-                    self.scroll(direction=UP)  # We scroll up again before we close it.
                     self.__pause()
                     logging.info(f'Closing {self.driver.title} window...')
                     self.driver.close()
@@ -142,7 +141,7 @@ class Bot:
             self.__pause()
         else:
             logging.info('Scrolling up...')
-            scroll_up(self.driver, pause)
+            scroll_up(self.driver, random.choice([0.3, 0.4, 0.5]))
             self.__pause()
 
     def goto(self):
