@@ -86,7 +86,6 @@ class Bot:
     def start(self):
         self.available_routes = self.__find_routes()
         self.scroll(direction=DOWN)
-        self.scroll(direction=UP)
         self.goto()
 
         logging.info('Switching an viewing windows...')
@@ -99,7 +98,6 @@ class Bot:
 
             logging.info(f'Switched to {self.driver.title}')
             self.scroll(direction=DOWN)
-            self.scroll(direction=UP)
 
             session = time.time() - start_time
             bot_logger.info(f'{self.driver.current_url} [{session:.3f}]')
@@ -123,6 +121,7 @@ class Bot:
             if window != self.next_window:
                 try:
                     self.driver.switch_to.window(window)
+                    self.scroll(direction=UP)  # We scroll up again before we close it.
                     self.__pause()
                     logging.info(f'Closing {self.driver.title} window...')
                     self.driver.close()
