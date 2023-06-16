@@ -166,15 +166,16 @@ class Bot:
                 frame = ad.get('iframe')
                 anchor = ad.get('anchor')
 
-                logging.info('Switching IFRAME..')
+                logging.info('Scrolling to IFRAME..')
                 scroll_to_element(self.driver, frame)
+                logging.info('Switching IFRAME..')
                 self.driver.switch_to.frame(frame)
+                logging.info('Clicking on ad.')
                 anchor.click()
+                logging.info('Waiting for 40 seconds.')
                 time.sleep(40)
-                self.__pause()
                 return
             except Exception as e:
-
                 logging.warning('Failed to click on ad trying again')
                 logging.exception(e)
 

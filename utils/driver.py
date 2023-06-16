@@ -56,7 +56,7 @@ def use_driver(proxy, ua) -> WebDriver:
         }
 
     driver = Chrome(
-        headless=True,
+        headless=False,
         service=service,
         options=options,
         seleniumwire_options=wire_options,
