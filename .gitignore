@@ -230,3 +230,4 @@ btrenv
 /logs
 /test.py
 /proxies.json
+*.crt
