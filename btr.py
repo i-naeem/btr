@@ -35,18 +35,20 @@ class BTR:
 
         self.anchors: List[WebElement] = []
         self.PAUSE_TIMES = [0.5, 1.0, 1.5, 2]
+        self.advertisements: List[WebElement] = []
         self.SCROLL_PAUSE_TIMES = [0.3, 0.5, 0.8]
 
     def view_advertisement(self):
-        random.shuffle(self.available_ads)
-        for ad in self.available_ads:
+        scroll_pause = random.choice(self.SCROLL_PAUSE_TIMES)
+        for advertisement in self.advertisements:
             try:
-                frame = ad.get('iframe')
-                anchor = ad.get('anchor')
+                frame = advertisement.get('iframe')
+                anchor = advertisement.get('anchor')
+                scroll_to_element(driver=self.driver, element=frame, pause=scroll_pause)
 
-                scroll_to_element(self.driver, frame)
                 self.driver.switch_to.frame(frame)
                 anchor.click()
+
                 time.sleep(40)
                 return
             except Exception as e:
