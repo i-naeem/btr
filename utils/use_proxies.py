@@ -1,10 +1,7 @@
-from configs import PROXIES_FILE_PATH
 from configs import PROXIES_PASSWORD
 from configs import PROXIES_USERNAME
 from dataclasses import dataclass
 from typing import List
-import random
-import os
 
 
 @dataclass
