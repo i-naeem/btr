@@ -15,8 +15,8 @@ from typing import List
 import random
 import time
 
-SCROLL_DOWN = "DOWN"
-SCROLL_UP = "UP"
+SCROLL_DOWN: str = "DOWN"
+SCROLL_UP: str = "UP"
 
 
 class BTR:
