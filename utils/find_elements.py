@@ -6,6 +6,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import TimeoutException
+from typing import Tuple
 from typing import List
 import random
 
@@ -14,13 +15,15 @@ def find_by_selectors(
     timeout: int,
     max_element: int,
     driver: WebDriver,
-    selectors: List[WebElement],
+    selectors: List[Tuple[str, str]],
+
     randomize_elements: bool = True
 ):
 
     wait = WebDriverWait(driver, timeout)
+    print(selectors)
 
-    all_elements = []
+    all_elements: List[WebElement] = []
     for selector in selectors:
         if len(all_elements) > max_element:
             break
