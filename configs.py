@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 # Bot
 MAX_TABS = 3
 MAX_TRAVERSES = 2
+ADVERTISEMENT_PAUSE_TIME = 60
 
 
 # Driver
