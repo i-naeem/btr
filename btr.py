@@ -124,6 +124,7 @@ class BTR:
             scroll_to_element(driver=self.driver, element=anchor, pause=scroll_pause)
             anchor.send_keys(Keys.CONTROL, Keys.ENTER)
             self.__pause()
+            tab_counter = tab_counter + 1
 
         tabs = [w for w in self.driver.window_handles if w != self.start_window]
         return tabs
