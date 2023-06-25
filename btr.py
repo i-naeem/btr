@@ -40,7 +40,6 @@ class BTR:
         self.next_window = None
 
         self.view_counter = 0
-        self.traverse_counter = 1
         self.PAUSE_TIMES = [0.5, 1.0, 1.5, 2]
         self.SCROLL_PAUSE_TIMES = [0.3, 0.5, 0.8]
         self.SCROLL_TO_ELEMENT_PAUSE_TIME = 1.5
@@ -48,7 +47,7 @@ class BTR:
         self.advertisements: List[WebElement] = []
 
     def run(self):
-        max_t_counter = 0
+        max_t_counter = 1
         while max_t_counter <= MAX_TRAVERSES:
             tabs = self.open_tabs()
             self.view_tabs(tabs)
@@ -63,6 +62,7 @@ class BTR:
         self.advertisements = self.__find_advertisement()
         self.view_advertisement()
         self.__pause()
+        self.__scroll()
 
     def view_tabs(self, tabs):
         for window in tabs:
@@ -153,11 +153,18 @@ class BTR:
         iframes = self.driver.find_elements(by=By.TAG_NAME, value="iframe")
         random.shuffle(iframes)
         for iframe in iframes:
-            if len(all_ads) >= 4:
+            if len(all_ads) >= 3:
                 break
 
             self.driver.switch_to.frame(iframe)
-            elements = find_by_selectors(self.driver, ADVERTISEMENT_SELECTORS)
+            elements = find_by_selectors(
+                timeout=2,
+                max_element=3,
+                driver=self.driver,
+                randomize_elements=False,
+                selectors=ADVERTISEMENT_SELECTORS,
+
+            )
             # Change the element to dictionary { iframe: active_iframe, anchor: anchor_element}
             all_ads.extend([dict(iframe=iframe, anchor=element) for element in elements])
             self.driver.switch_to.default_content()
