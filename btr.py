@@ -1,4 +1,5 @@
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 from typing import List
 import random
 import time
@@ -6,9 +7,9 @@ import time
 
 class BTR:
     def __init__(self,
-                 driver,
-                 selectors,
-                 initial_anchors,
+                 driver: WebDriver,
+                 selectors: List[WebElement],
+                 initial_anchors: List[WebElement],
                  ):
 
         self.driver = driver
@@ -18,7 +19,6 @@ class BTR:
         self.SLEEP_TIMES = [0.5, 1.0, 1.5, 2]
 
     def __find_anchors(self) -> List[WebElement]:
-
         return []
 
     def __find_advertisement(self) -> List[WebElement]:
