@@ -16,6 +16,7 @@ HEADLESS = False
 
 
 DRIVER_EXECUTABLE_PATH = os.environ.get('DRIVER_EXECUTABLE_PATH', "./assets/chromedriver.exe")
+USER_AGENTS_FILE_PATH = os.environ.get("USER_AGENTS_FILE_PATH", "./assets/user_agents.json")
 PROXIES_FILE_PATH = os.environ.get("PROXIES_FILE_PATH", "./assets/proxies.json")
 PROXIES_USERNAME = os.environ.get("PROXIES_USERNAME", None)
 PROXIES_PASSWORD = os.environ.get("PROXIES_PASSWORD", None)

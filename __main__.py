@@ -1,9 +1,7 @@
+from configs import USER_AGENTS_FILE_PATH
+from utils.parse_json import parse_json
 from configs import PROXIES_FILE_PATH
-import random
-import json
 
-proxies_list = []
 
-with open(file=PROXIES_FILE_PATH, mode="r", encoding="utf-8") as f:
-    proxies_list = json.load(f)
-    random.shuffle(proxies_list)
+user_agents = parse_json(USER_AGENTS_FILE_PATH)
+proxies_list = parse_json(PROXIES_FILE_PATH)
