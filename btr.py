@@ -4,6 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from utils.find_elements import find_by_selectors
 from selenium.webdriver.common.keys import Keys
 from utils.scrolls import scroll_to_element
+from selenium.webdriver.common.by import By
 from utils.scrolls import scroll_down
 from utils.scrolls import scroll_up
 from configs import MAX_TRAVERSES
@@ -136,4 +137,19 @@ class BTR:
         )
 
     def __find_advertisement(self) -> List[WebElement]:
-        return []
+        all_ads = []
+        iframes = self.driver.find_elements(by=By.TAG_NAME, value="iframe")
+        random.shuffle(iframes)
+        for iframe in iframes:
+            if len(all_ads) >= 4:
+                break
+
+            self.driver.switch_to.frame(iframe)
+            elements = find_by_selectors(self.driver, self.ad_selectors)
+            # Change the element to dictionary { iframe: active_iframe, anchor: anchor_element}
+            all_ads.extend([dict(iframe=iframe, anchor=element) for element in elements])
+            self.driver.switch_to.default_content()
+
+        self.driver.switch_to.default_content()
+
+        return all_ads
