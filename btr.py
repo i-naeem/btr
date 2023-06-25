@@ -43,7 +43,7 @@ class BTR:
 
         self.advertisements: List[WebElement] = []
 
-    def start(self):
+    def run(self):
         max_t_counter = 0
         while max_t_counter <= MAX_TRAVERSES:
             tabs = self.open_tabs()
