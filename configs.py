@@ -8,4 +8,5 @@ MAX_TRAVERSES = 2
 
 
 # Driver
+DRIVER_EXECUTABLE_PATH = "./assets/chromedriver.exe"
 HEADLESS = False
