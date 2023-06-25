@@ -3,6 +3,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.find_elements import find_by_selectors
 from selenium.webdriver.common.keys import Keys
+from configs import ADVERTISEMENT_PAUSE_TIME
 from utils.scrolls import scroll_to_element
 from configs import ADVERTISEMENT_SELECTORS
 from selenium.webdriver.common.by import By
@@ -42,6 +43,7 @@ class BTR:
         self.traverse_counter = 1
         self.PAUSE_TIMES = [0.5, 1.0, 1.5, 2]
         self.SCROLL_PAUSE_TIMES = [0.3, 0.5, 0.8]
+        self.SCROLL_TO_ELEMENT_PAUSE_TIME = 1.5
 
         self.advertisements: List[WebElement] = []
 
@@ -65,21 +67,25 @@ class BTR:
     def view_tabs(self, tabs):
         for window in tabs:
             self.driver.switch_to.window(window)
+            self.__pause()
             self.__scroll(direction=SCROLL_DOWN)
             self.view_counter = self.view_counter + 1
 
     def view_advertisement(self):
-        scroll_pause = random.choice(self.SCROLL_PAUSE_TIMES)
         for advertisement in self.advertisements:
             try:
                 frame = advertisement.get('iframe')
                 anchor = advertisement.get('anchor')
-                scroll_to_element(driver=self.driver, element=frame, pause=scroll_pause)
+                scroll_to_element(
+                    element=frame,
+                    driver=self.driver,
+                    pause=self.SCROLL_TO_ELEMENT_PAUSE_TIME
+                )
 
                 self.driver.switch_to.frame(frame)
                 anchor.click()
 
-                time.sleep(40)
+                time.sleep(ADVERTISEMENT_PAUSE_TIME)
                 return
             except Exception as e:
                 print('FAILED TO CLICK ON AD')
@@ -94,12 +100,11 @@ class BTR:
             if window == self.next_window:
                 continue
             try:
-                self.driver.switch_to.window(window)
                 self.__pause()
+                self.driver.switch_to.window(window)
                 self.driver.close()
             except NoSuchWindowException as e:
                 print('NoSuchWindow')
-                pass
 
         self.driver.switch_to.window(self.next_window)
 
@@ -118,17 +123,21 @@ class BTR:
 
     def open_tabs(self):
         tab_counter = 0
-        scroll_pause = random.choice(self.SCROLL_PAUSE_TIMES)
         for anchor in self.anchors:
             if tab_counter >= self.max_tabs:
                 break
-            scroll_to_element(driver=self.driver, element=anchor, pause=scroll_pause)
+            scroll_to_element(
+                element=anchor,
+                driver=self.driver,
+                pause=self.SCROLL_TO_ELEMENT_PAUSE_TIME
+            )
+
             anchor.send_keys(Keys.CONTROL, Keys.ENTER)
-            self.__pause()
             tab_counter = tab_counter + 1
 
         self.start_window = self.driver.current_window_handle
         tabs = [w for w in self.driver.window_handles if w != self.start_window]
+        random.shuffle(tabs)
         return tabs
 
     def __find_anchors(self) -> List[WebElement]:
