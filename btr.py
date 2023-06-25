@@ -42,7 +42,7 @@ class BTR:
         self.view_counter = 0
         self.PAUSE_TIMES = [0.5, 1.0, 1.5, 2]
         self.SCROLL_PAUSE_TIMES = [0.3, 0.5, 0.8]
-        self.SCROLL_TO_ELEMENT_PAUSE_TIME = 1.5
+        self.SCROLL_TO_ELEMENT_PAUSE_TIME = 1.9
 
         self.advertisements: List[WebElement] = []
 
@@ -133,6 +133,7 @@ class BTR:
             )
 
             anchor.send_keys(Keys.CONTROL, Keys.ENTER)
+            self.__pause()
             tab_counter = tab_counter + 1
 
         self.start_window = self.driver.current_window_handle
