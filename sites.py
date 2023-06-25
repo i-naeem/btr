@@ -19,7 +19,10 @@ blog_dera_jobs = Site(
         ("DuckDuckGo", "https://duckduckgo.com/?q=site:https://blog.derajobs.pk"),
         ("Bing", "https://bing.com/?q=site:https://blog.derajobs.pk"),
     ],
-    search_selectors=[(By.CSS_SELECTOR, "a[href*='https://blogderajobs.com']")],
+    search_selectors=[
+        (By.CSS_SELECTOR, 'a[href*="https://blog.derajobs.pk/"]'),
+        (By.CSS_SELECTOR, "p[role='presentation'] a")
+    ],
     anchors_selectors=[
         (By.CSS_SELECTOR, ".wp-block-latest-posts__post-title"),
         (By.CSS_SELECTOR, ".entry-title a"),
