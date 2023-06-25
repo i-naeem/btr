@@ -37,6 +37,26 @@ class BTR:
         self.PAUSE_TIMES = [0.5, 1.0, 1.5, 2]
         self.SCROLL_PAUSE_TIMES = [0.3, 0.5, 0.8]
 
+    def view_advertisement(self):
+        random.shuffle(self.available_ads)
+        for ad in self.available_ads:
+            try:
+                frame = ad.get('iframe')
+                anchor = ad.get('anchor')
+
+                scroll_to_element(self.driver, frame)
+                self.driver.switch_to.frame(frame)
+                anchor.click()
+                time.sleep(40)
+                return
+            except Exception as e:
+                print('FAILED TO CLICK ON AD')
+
+            finally:
+                self.driver.switch_to.default_content()
+
+        self.driver.switch_to.default_content()
+
     def open_tabs(self):
         tab_counter = 0
         scroll_pause = random.choice(self.SCROLL_PAUSE_TIMES)
