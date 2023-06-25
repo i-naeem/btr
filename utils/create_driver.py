@@ -6,7 +6,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.service import Service
 from configs import DRIVER_EXECUTABLE_PATH
 from configs import LOADING_STRATEGY
-from configs import DONT_LOAD_IMAGES
 from configs import CHROME_HEADLESS
 
 
@@ -39,7 +38,6 @@ def create_driver(ua, proxy) -> WebDriver:
     }
 
     options.add_experimental_option('prefs', prefs)
-    # options.add_argument(f"--blink-settings=imagesEnabled={DONT_LOAD_IMAGES}")
     options.page_load_strategy = LOADING_STRATEGY
     options.add_argument(f"--user-agent={ua}")
 

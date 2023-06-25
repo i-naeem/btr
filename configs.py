@@ -19,7 +19,6 @@ PROXIES_USERNAME = os.environ.get("PROXIES_USERNAME", None)
 PROXIES_PASSWORD = os.environ.get("PROXIES_PASSWORD", None)
 LOADING_STRATEGY = "normal"  # eager | normal
 CHROME_HEADLESS = False  # True | False
-DONT_LOAD_IMAGES = False  # True | False
 
 
 ADVERTISEMENT_SELECTORS = [
