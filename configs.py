@@ -2,16 +2,23 @@
 configs.py - Configuration settings for the bot.
 """
 from selenium.webdriver.common.by import By
+from dotenv import load_dotenv
+import os
 
-# Bot
+load_dotenv()
+
+
 MAX_TABS = 3
 MAX_TRAVERSES = 2
 ADVERTISEMENT_PAUSE_TIME = 60
 
-
-# Driver
-DRIVER_EXECUTABLE_PATH = "./assets/chromedriver.exe"
 HEADLESS = False
+
+
+DRIVER_EXECUTABLE_PATH = os.environ.get('DRIVER_EXECUTABLE_PATH', "./assets/chromedriver.exe")
+PROXIES_FILES = os.environ.get("PROXIES_FILE_PATH", "./assets/proxies.json")
+PROXIES_USERNAME = os.environ.get("PROXIES_USERNAME", None)
+PROXIES_PASSWORD = os.environ.get("PROXIES_PASSWORD", None)
 
 
 ADVERTISEMENT_SELECTORS = [
