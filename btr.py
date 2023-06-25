@@ -2,8 +2,11 @@ from selenium.common.exceptions import NoSuchWindowException
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from utils.find_elements import find_by_selectors
+from selenium.webdriver.common.keys import Keys
+from utils.scrolls import scroll_to_element
 from utils.scrolls import scroll_down
 from utils.scrolls import scroll_up
+from configs import MAX_TABS
 from typing import List
 import random
 import time
@@ -18,17 +21,33 @@ class BTR:
                  driver: WebDriver,
                  selectors: List[WebElement],
                  initial_anchors: List[WebElement],
+
+                 max_tabs: int = MAX_TABS
                  ):
 
         self.driver = driver
+        self.max_tabs = max_tabs
         self.selectors = selectors
         self.initial_anchors = initial_anchors
 
-        self.next_window = self.driver.current_window_handle
         self.start_window = self.driver.current_window_handle
+        self.next_window = None
 
+        self.anchors: List[WebElement] = []
         self.PAUSE_TIMES = [0.5, 1.0, 1.5, 2]
         self.SCROLL_PAUSE_TIMES = [0.3, 0.5, 0.8]
+
+    def open_tabs(self):
+        tab_counter = 0
+        scroll_pause = random.choice(self.SCROLL_PAUSE_TIMES)
+        for anchor in self.anchors:
+            if tab_counter >= self.max_tabs:
+                break
+            scroll_to_element(driver=self.driver, element=anchor, pause=scroll_pause)
+            anchor.send_keys(Keys.CONTROL, Keys.ENTER)
+            self.__pause()
+
+        self.start_window = self.driver.current_window_handle
 
     def __close_windows(self):
         for window in self.driver.window_handles:
