@@ -127,6 +127,7 @@ class BTR:
             self.__pause()
             tab_counter = tab_counter + 1
 
+        self.start_window = self.driver.current_window_handle
         tabs = [w for w in self.driver.window_handles if w != self.start_window]
         return tabs
 
