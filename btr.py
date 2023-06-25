@@ -4,6 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from utils.find_elements import find_by_selectors
 from selenium.webdriver.common.keys import Keys
 from utils.scrolls import scroll_to_element
+from configs import ADVERTISEMENT_SELECTORS
 from selenium.webdriver.common.by import By
 from utils.scrolls import scroll_down
 from utils.scrolls import scroll_up
@@ -146,7 +147,7 @@ class BTR:
                 break
 
             self.driver.switch_to.frame(iframe)
-            elements = find_by_selectors(self.driver, self.ad_selectors)
+            elements = find_by_selectors(self.driver, ADVERTISEMENT_SELECTORS)
             # Change the element to dictionary { iframe: active_iframe, anchor: anchor_element}
             all_ads.extend([dict(iframe=iframe, anchor=element) for element in elements])
             self.driver.switch_to.default_content()
